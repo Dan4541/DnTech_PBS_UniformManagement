@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DnTech_PBS_UniformManagement")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2b7ed9cea996b39bdcff6b4c8b6af9c86d20d3d5")]
 [assembly: System.Reflection.AssemblyProductAttribute("DnTech_PBS_UniformManagement")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DnTech_PBS_UniformManagement")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
