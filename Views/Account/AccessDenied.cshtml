@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="auth-container">
+    <div class="auth-card text-center">
+        <!-- Error Icon -->
+        <div class="auth-logo" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+            <i class="fas fa-ban"></i>
+        </div>
+
+        <!-- Header -->
+        <div class="auth-header">
+            <h1 class="auth-title" style="color: #ef4444;">Access Denied</h1>
+            <p class="auth-subtitle">You don't have permission to access this resource</p>
+        </div>
+
+        <!-- Error Details -->
+        <div class="mb-4 p-4 rounded" style="background: #fee2e2;">
+            <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+            <span class="text-danger fw-bold">Error 403 - Forbidden</span>
+        </div>
+
+        <p class="text-muted mb-4">
+            This area is restricted. If you believe you should have access,
+            please contact your system administrator.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="d-grid gap-2">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-custom btn-gradient">
+                <i class="fas fa-home me-2"></i>
+                Go to Home
+            </a>
+            <button onclick="window.history.back()" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>
+                Go Back
+            </button>
+        </div>
+
+        <!-- Help Section -->
+        <div class="mt-4 pt-4 border-top">
+            <p class="text-muted small mb-2">
+                <i class="fas fa-question-circle me-2"></i>
+                Need help?
+            </p>
+            <a href="#" class="text-decoration-none" style="color: var(--primary-color);">
+                Contact Support
+            </a>
+        </div>
+    </div>
+</div>

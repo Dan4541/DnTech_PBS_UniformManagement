@@ -1,0 +1,127 @@
+﻿@using DnTech_PBS_UniformManagement.ViewModels
+@model EditUserViewModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-custom">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="auth-logo d-inline-flex mb-3" style="background: var(--gradient-2);">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <h2 class="text-gradient">Edit User</h2>
+                        <p class="text-muted">Update user information and roles</p>
+                    </div>
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <ul class="mb-0">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <form asp-action="EditUser" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label asp-for="Fullname" class="form-label">
+                                        <i class="fas fa-user me-2"></i>Full Name
+                                    </label>
+                                    <input asp-for="Fullname" class="form-control" placeholder="Enter full name" readonly/>
+                                    <span asp-validation-for="Fullname" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label">
+                                        <i class="fas fa-envelope me-2"></i>Email
+                                    </label>
+                                    <input asp-for="Email" class="form-control"/>
+                                    <small class="text-muted">Incorrect Format of Email</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="IdCard" class="form-label">
+                                        <i class="fas fa-id-card me-2"></i>ID Card
+                                    </label>
+                                    <input asp-for="IdCard" class="form-control" placeholder="Enter ID card" readonly/>
+                                    <span asp-validation-for="IdCard" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-user-tag me-2"></i>Assign Roles
+                                    </label>
+                                    <div class="p-3 rounded" style="background: #f1f5f9;">
+                                        @foreach (var role in Model.AvailableRoles)
+                                        {
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input"
+                                                       type="checkbox"
+                                                       name="SelectedRoles"
+                                                       value="@role.Name"
+                                                       id="role_@role.Id"
+                                                       @(Model.UserRoles.Contains(role.Name) ? "checked" : "") />
+                                                <label class="form-check-label" for="role_@role.Id">
+                                                    <strong>@role.Name</strong>
+                                                    @if (!string.IsNullOrEmpty(role.Description))
+                                                    {
+                                                        <br />
+                                                
+                                                        <small class="text-muted">@role.Description</small>
+                                                    }
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-check form-switch mb-3">
+                                    <input asp-for="Active" class="form-check-input" type="checkbox" id="activeSwitch" />
+                                    <label asp-for="Active" class="form-check-label" for="activeSwitch">
+                                        <i class="fas fa-toggle-on me-2"></i>User Active
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-custom btn-gradient">
+                                <i class="fas fa-save me-2"></i>
+                                Save Changes
+                            </button>
+                            <a asp-action="ManageUsers" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Back to User List
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

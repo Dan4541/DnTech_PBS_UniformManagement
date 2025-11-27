@@ -1,0 +1,138 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <div class="auth-logo float-animation mb-4">
+                <i class="fas fa-tshirt"></i>
+            </div>
+
+            <h1 class="hero-title">
+                Welcome to <span class="text-white">Uniform Management System</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Efficient and modern solution for managing employee uniforms distribution
+            </p>
+
+            @if (User.Identity?.IsAuthenticated ?? false)
+            {
+                <div class="hero-buttons">
+                    <a asp-controller="Home" asp-action="Dashboard" class="btn btn-custom btn-primary-custom">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        Go to Dashboard
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="hero-buttons">
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-custom btn-primary-custom">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Sign In
+                    </a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-custom btn-outline-custom">
+                        <i class="fas fa-user-plus me-2"></i>
+                        Register
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-gradient mb-3">
+                Why Choose Our System?
+            </h2>
+            <p class="lead text-muted">
+                Powerful features to streamline your uniform management process
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Employee Management</h3>
+                    <p class="feature-description">
+                        Comprehensive employee database with easy access and management
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Location Tracking</h3>
+                    <p class="feature-description">
+                        Track uniforms across provinces and health areas efficiently
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Reports & Analytics</h3>
+                    <p class="feature-description">
+                        Generate detailed reports and insights on uniform distribution
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Secure Access</h3>
+                    <p class="feature-description">
+                        Role-based access control to ensure data security and privacy
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+@if (!(User.Identity?.IsAuthenticated ?? false))
+{
+    <section class="py-5" style="background: linear-gradient(135deg, #0891b2 0%, #059669 100%);">
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="display-6 fw-bold text-white mb-3">
+                        Ready to Get Started?
+                    </h2>
+                    <p class="lead text-white mb-4 opacity-90">
+                        Join us today and experience seamless uniform management
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-custom btn-primary-custom btn-lg">
+                            <i class="fas fa-rocket me-2"></i>
+                            Get Started Now
+                        </a>
+                        <a href="#features" class="btn btn-custom btn-outline-custom btn-lg">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
