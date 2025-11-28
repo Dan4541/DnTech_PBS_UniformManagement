@@ -1,0 +1,87 @@
+﻿@using DnTech_PBS_UniformManagement.ViewModels
+@model CreateHealthAreaViewModel
+@{
+    ViewData["Title"] = "Create Health Area";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-custom">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="auth-logo d-inline-flex mb-3" style="background: var(--secondary-color);">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <h2 class="text-gradient">Create Health Area</h2>
+                        <p class="text-muted mb-1">Add a new health area</p>
+                        @if (!string.IsNullOrEmpty(Model.ProvinceName))
+                        {
+                            <p class="mb-0">
+                                <span class="badge" style="background: var(--gradient-1);">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    @Model.ProvinceName
+                                </span>
+                            </p>
+                        }
+                    </div>
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <ul class="mb-0">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <form asp-action="CreateHealthArea" method="post">
+                        <input type="hidden" asp-for="ProvinceId" />
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">
+                                <i class="fas fa-hospital me-2"></i>Health Area Name
+                            </label>
+                            <input asp-for="Name"
+                                   class="form-control"
+                                   placeholder="Enter health area name"
+                                   autofocus />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Code" class="form-label">
+                                <i class="fas fa-barcode me-2"></i>Health Area Code (Optional)
+                            </label>
+                            <input asp-for="Code"
+                                   class="form-control"
+                                   placeholder="e.g., HA-001" />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                            <small class="text-muted">A unique code for the health area</small>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-custom btn-gradient">
+                                <i class="fas fa-save me-2"></i>
+                                Create Health Area
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Back to Dashboard
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

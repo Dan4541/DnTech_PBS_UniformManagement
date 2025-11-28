@@ -9,6 +9,9 @@ namespace DnTech_PBS_UniformManagement.Data
     {
         public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<ApplicationRole> Roles { get; set; }
+        public DbSet<Province> Provinces { get; set; }
+        public DbSet<HealthArea> HealthAreas { get; set; }
+        public DbSet<EmployeeHealthArea> EmployeeHealthAreas { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

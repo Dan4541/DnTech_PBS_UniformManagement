@@ -1,0 +1,76 @@
+﻿@using DnTech_PBS_UniformManagement.ViewModels
+@model CreateProvinceViewModel
+@{
+    ViewData["Title"] = "Create Province";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-custom">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="auth-logo d-inline-flex mb-3">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h2 class="text-gradient">Create Province</h2>
+                        <p class="text-muted">Add a new province to the system</p>
+                    </div>
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <ul class="mb-0">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <form asp-action="CreateProvince" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">
+                                <i class="fas fa-map-marker-alt me-2"></i>Province Name
+                            </label>
+                            <input asp-for="Name"
+                                   class="form-control"
+                                   placeholder="Enter province name"
+                                   autofocus />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Code" class="form-label">
+                                <i class="fas fa-barcode me-2"></i>Province Code (Optional)
+                            </label>
+                            <input asp-for="Code"
+                                   class="form-control"
+                                   placeholder="e.g., SJ, AL, CR" />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                            <small class="text-muted">A unique code for the province</small>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-custom btn-gradient">
+                                <i class="fas fa-save me-2"></i>
+                                Create Province
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Back to Dashboard
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

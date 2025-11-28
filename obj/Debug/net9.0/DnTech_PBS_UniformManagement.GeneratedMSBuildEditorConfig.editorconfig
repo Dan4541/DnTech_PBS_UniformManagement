@@ -42,8 +42,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxFZGl0VXNlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Account/ForgotPasswordViewModel.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxGb3Jnb3RQYXNzd29yZFZpZXdNb2RlbC5jc2h0bWw=
+[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Account/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Account/ForgotPasswordConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxGb3Jnb3RQYXNzd29yZENvbmZpcm1hdGlvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Account/Login.cshtml]
@@ -60,6 +64,34 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Account/ResetPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZXNldFBhc3N3b3JkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Account/ResetPasswordConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZXNldFBhc3N3b3JkQ29uZmlybWF0aW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Dashboard/AssignEmployee.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEFzc2lnbkVtcGxveWVlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Dashboard/CreateHealthArea.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXENyZWF0ZUhlYWx0aEFyZWEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Dashboard/CreateProvince.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXENyZWF0ZVByb3ZpbmNlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Dashboard/HealthAreaDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEhlYWx0aEFyZWFEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Dashboard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Home/Index.cshtml]

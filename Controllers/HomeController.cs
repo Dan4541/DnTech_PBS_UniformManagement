@@ -15,6 +15,12 @@ namespace DnTech_PBS_UniformManagement.Controllers
 
         public IActionResult Index()
         {
+            // Si el usuario está autenticado, redirigir al Dashboard
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+            // Si no está autenticado, mostrar la landing page
             return View();
         }
 

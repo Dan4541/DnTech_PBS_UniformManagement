@@ -1,0 +1,523 @@
+﻿@using DnTech_PBS_UniformManagement.ViewModels
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- Stats Cards -->
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Provinces</h6>
+                            <h2 class="mb-0 fw-bold">@Model.TotalProvinces</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(6, 182, 212, 0.1);">
+                            <i class="fas fa-map-marked-alt fa-2x" style="color: var(--primary-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Health Areas</h6>
+                            <h2 class="mb-0 fw-bold">@Model.TotalHealthAreas</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(16, 185, 129, 0.1);">
+                            <i class="fas fa-hospital fa-2x" style="color: var(--secondary-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Employees</h6>
+                            <h2 class="mb-0 fw-bold">@Model.TotalEmployees</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(20, 184, 166, 0.1);">
+                            <i class="fas fa-users fa-2x" style="color: var(--accent-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Total Users</h6>
+                            <h2 class="mb-0 fw-bold">@Model.TotalUsers</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(6, 182, 212, 0.1);">
+                            <i class="fas fa-user-shield fa-2x" style="color: var(--primary-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header with Add Province Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-gradient mb-1">
+                <i class="fas fa-map-marked-alt me-2"></i>Provinces & Health Areas
+            </h2>
+            <p class="text-muted mb-0">Manage provinces, health areas and employee assignments</p>
+        </div>
+        @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+        {
+            <a asp-action="CreateProvince" class="btn btn-custom btn-gradient">
+                <i class="fas fa-plus-circle me-2"></i>
+                Add Province
+            </a>
+        }
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Provinces List - Improved Design -->
+    @if (Model.Provinces.Any())
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-custom border-0">
+                    <div class="card-body p-0">
+                        @foreach (var province in Model.Provinces)
+                        {
+                            <div class="province-item border-bottom">
+                                <!-- Province Header -->
+                                <div class="province-header p-4 d-flex justify-content-between align-items-center"
+                                     style="cursor: pointer; transition: all 0.3s ease;"
+                                     onclick="toggleProvince('@province.Id')">
+                                    <div class="d-flex align-items-center flex-grow-1">
+                                        <div class="province-icon me-3">
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                                 style="width: 60px; height: 60px; background: var(--gradient-1);">
+                                                <i class="fas fa-map-marker-alt fa-2x text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h4 class="mb-1 fw-bold">@province.Name</h4>
+                                            <div class="d-flex gap-3">
+                                                @if (!string.IsNullOrEmpty(province.Code))
+                                                {
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-barcode me-1"></i>
+                                                        Code: @province.Code
+                                                    </small>
+                                                }
+                                                <small class="text-muted">
+                                                    <i class="fas fa-hospital me-1"></i>
+                                                    @province.HealthAreasCount @(province.HealthAreasCount == 1 ? "Health Area" : "Health Areas")
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                                        {
+                                            <a asp-action="CreateHealthArea"
+                                               asp-route-provinceId="@province.Id"
+                                               class="btn btn-sm btn-outline-primary"
+                                               onclick="event.stopPropagation()">
+                                                <i class="fas fa-plus me-1"></i>
+                                                Add Area
+                                            </a>
+                                        }
+                                        <button class="btn btn-sm btn-light province-toggle"
+                                                type="button"
+                                                id="toggle-btn-@province.Id">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Health Areas List (Collapsible) -->
+                                <div class="province-content collapse" id="province-@province.Id">
+                                    @if (province.HealthAreas.Any())
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-hover mb-0">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th class="ps-4">
+                                                            <i class="fas fa-hospital me-2"></i>Health Area
+                                                        </th>
+                                                        <th>
+                                                            <i class="fas fa-barcode me-2"></i>Code
+                                                        </th>
+                                                        <th>
+                                                            <i class="fas fa-users me-2"></i>Employees
+                                                        </th>
+                                                        <th class="text-center">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var healthArea in province.HealthAreas)
+                                                    {
+                                                        <tr>
+                                                            <td class="ps-4">
+                                                                <a asp-action="HealthAreaDetails"
+                                                                   asp-route-id="@healthArea.Id"
+                                                                   class="text-decoration-none fw-bold"
+                                                                   style="color: var(--primary-color);">
+                                                                    @healthArea.Name
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                @if (!string.IsNullOrEmpty(healthArea.Code))
+                                                                {
+                                                                    <span class="badge bg-secondary">@healthArea.Code</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="text-muted">N/A</span>
+                                                                }
+                                                            </td>
+                                                            <td>
+                                                                <span class="badge" style="background: var(--gradient-1);">
+                                                                    @healthArea.EmployeesCount
+                                                                </span>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <a asp-action="HealthAreaDetails"
+                                                                   asp-route-id="@healthArea.Id"
+                                                                   class="btn btn-sm btn-outline-primary me-1"
+                                                                   title="View Details">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
+                                                                @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                                                                {
+                                                                    <a asp-action="AssignEmployee"
+                                                                       asp-route-healthAreaId="@healthArea.Id"
+                                                                       class="btn btn-sm btn-outline-success"
+                                                                       title="Assign Employee">
+                                                                        <i class="fas fa-user-plus"></i>
+                                                                    </a>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="p-4 text-center bg-light">
+                                            <i class="fas fa-hospital fa-2x text-muted mb-2 opacity-25"></i>
+                                            <p class="text-muted mb-2">No health areas in this province yet</p>
+                                            @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                                            {
+                                                <a asp-action="CreateHealthArea"
+                                                   asp-route-provinceId="@province.Id"
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-plus me-1"></i>
+                                                    Add First Health Area
+                                                </a>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-custom border-0">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-map-marked-alt fa-4x text-muted mb-4 opacity-25"></i>
+                <h4 class="text-muted mb-3">No Provinces Yet</h4>
+                <p class="text-muted mb-4">Start by creating your first province</p>
+                @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                {
+                    <a asp-action="CreateProvince" class="btn btn-custom btn-gradient">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        Create First Province
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function toggleProvince(provinceId) {
+            const content = document.getElementById('province-' + provinceId);
+            const toggleBtn = document.getElementById('toggle-btn-' + provinceId);
+            const icon = toggleBtn.querySelector('i');
+
+            // Toggle collapse
+            const bsCollapse = new bootstrap.Collapse(content, {
+                toggle: true
+            });
+
+            // Toggle icon
+            if (content.classList.contains('show')) {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            } else {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            }
+        }
+
+        // Add hover effect to province headers
+        document.querySelectorAll('.province-header').forEach(header => {
+            header.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f8fafc';
+            });
+            header.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = 'transparent';
+            });
+        });
+    </script>
+}
+
+
+
+
+
+@* @using DnTech_PBS_UniformManagement.ViewModels
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- Stats Cards -->
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Provinces</h6>
+                            <h2 class="mb-0 fw-bold">@Model.TotalProvinces</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(6, 182, 212, 0.1);">
+                            <i class="fas fa-map-marked-alt fa-2x" style="color: var(--primary-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Health Areas</h6>
+                            <h2 class="mb-0 fw-bold">@Model.TotalHealthAreas</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(16, 185, 129, 0.1);">
+                            <i class="fas fa-hospital fa-2x" style="color: var(--secondary-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Employees</h6>
+                            <h2 class="mb-0 fw-bold">@Model.TotalEmployees</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(20, 184, 166, 0.1);">
+                            <i class="fas fa-users fa-2x" style="color: var(--accent-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Total Users</h6>
+                            <h2 class="mb-0 fw-bold">@Model.TotalUsers</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(6, 182, 212, 0.1);">
+                            <i class="fas fa-user-shield fa-2x" style="color: var(--primary-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header with Add Province Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-gradient mb-1">
+                <i class="fas fa-map-marked-alt me-2"></i>Provinces & Health Areas
+            </h2>
+            <p class="text-muted mb-0">Manage provinces, health areas and employee assignments</p>
+        </div>
+        @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+        {
+            <a asp-action="CreateProvince" class="btn btn-custom btn-gradient">
+                <i class="fas fa-plus-circle me-2"></i>
+                Add Province
+            </a>
+        }
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Provinces Grid -->
+    @if (Model.Provinces.Any())
+    {
+        <div class="row g-4">
+            @foreach (var province in Model.Provinces)
+            {
+                <div class="col-lg-6">
+                    <div class="card shadow-custom h-100 border-0">
+                        <div class="card-header bg-gradient text-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-0 fw-bold">
+                                        <i class="fas fa-map-marker-alt me-2"></i>
+                                        @province.Name
+                                    </h5>
+                                    @if (!string.IsNullOrEmpty(province.Code))
+                                    {
+                                        <small class="opacity-75">Code: @province.Code</small>
+                                    }
+                                </div>
+                                <span class="badge bg-white text-dark">
+                                    @province.HealthAreasCount
+                                    @(province.HealthAreasCount == 1 ? "Area" : "Areas")
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            @if (province.HealthAreas.Any())
+                            {
+                                <div class="list-group list-group-flush">
+                                    @foreach (var healthArea in province.HealthAreas)
+                                    {
+                                        <a asp-action="HealthAreaDetails"
+                                           asp-route-id="@healthArea.Id"
+                                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3">
+                                            <div>
+                                                <h6 class="mb-1 fw-bold">
+                                                    <i class="fas fa-hospital me-2" style="color: var(--secondary-color);"></i>
+                                                    @healthArea.Name
+                                                </h6>
+                                                @if (!string.IsNullOrEmpty(healthArea.Code))
+                                                {
+                                                    <small class="text-muted">Code: @healthArea.Code</small>
+                                                }
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge" style="background: var(--gradient-1);">
+                                                    <i class="fas fa-users me-1"></i>
+                                                    @healthArea.EmployeesCount
+                                                </span>
+                                            </div>
+                                        </a>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-4">
+                                    <i class="fas fa-hospital fa-3x text-muted mb-3 opacity-25"></i>
+                                    <p class="text-muted mb-0">No health areas yet</p>
+                                </div>
+                            }
+                        </div>
+                        @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                        {
+                            <div class="card-footer bg-light border-0">
+                                <a asp-action="CreateHealthArea"
+                                   asp-route-provinceId="@province.Id"
+                                   class="btn btn-outline-primary btn-sm w-100">
+                                    <i class="fas fa-plus me-2"></i>
+                                    Add Health Area
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-custom border-0">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-map-marked-alt fa-4x text-muted mb-4 opacity-25"></i>
+                <h4 class="text-muted mb-3">No Provinces Yet</h4>
+                <p class="text-muted mb-4">Start by creating your first province</p>
+                @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                {
+                    <a asp-action="CreateProvince" class="btn btn-custom btn-gradient">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        Create First Province
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div> *@

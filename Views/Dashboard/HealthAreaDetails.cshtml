@@ -1,0 +1,203 @@
+﻿@model DnTech_PBS_UniformManagement.Models.Entities.HealthArea
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a asp-action="Index" class="text-decoration-none">
+                        <i class="fas fa-home me-1"></i>Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <span class="text-muted">@Model.Province.Name</span>
+                </li>
+                <li class="breadcrumb-item active">@Model.Name</li>
+            </ol>
+        </nav>
+
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h2 class="text-gradient mb-2">
+                    <i class="fas fa-hospital me-2"></i>@Model.Name
+                </h2>
+                <p class="text-muted mb-1">
+                    <i class="fas fa-map-marker-alt me-2"></i>
+                    @Model.Province.Name
+                </p>
+                @if (!string.IsNullOrEmpty(Model.Code))
+                {
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-barcode me-2"></i>
+                        Code: @Model.Code
+                    </p>
+                }
+            </div>
+            @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+            {
+                <a asp-action="AssignEmployee"
+                   asp-route-healthAreaId="@Model.Id"
+                   class="btn btn-custom btn-gradient">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Assign Employee
+                </a>
+            }
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Total Employees</h6>
+                            <h2 class="mb-0 fw-bold">@Model.EmployeeHealthAreas.Count(e => e.Active)</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(6, 182, 212, 0.1);">
+                            <i class="fas fa-users fa-2x" style="color: var(--primary-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employees Table -->
+    <div class="card shadow-custom border-0">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold">
+                <i class="fas fa-users me-2"></i>
+                Assigned Employees
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (Model.EmployeeHealthAreas.Any(e => e.Active))
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user me-2"></i>Full Name</th>
+                                <th><i class="fas fa-envelope me-2"></i>Email</th>
+                                <th><i class="fas fa-id-card me-2"></i>ID Card</th>
+                                <th><i class="fas fa-calendar me-2"></i>Assigned Date</th>
+                                @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                                {
+                                    <th class="text-center"><i class="fas fa-cog me-2"></i>Actions</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var assignment in Model.EmployeeHealthAreas.Where(e => e.Active))
+                            {
+                                <tr>
+                                    <td class="fw-bold">@assignment.Employee.Fullname</td>
+                                    <td>@assignment.Employee.Email</td>
+                                    <td>@(assignment.Employee.IdCard ?? "N/A")</td>
+                                    <td>@assignment.AssignedAt.ToString("MMM dd, yyyy")</td>
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                                    {
+                                        <td class="text-center">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    onclick="confirmRemove('@assignment.EmployeeId', '@assignment.Employee.Fullname')"
+                                                    title="Remove Employee">
+                                                <i class="fas fa-user-times"></i>
+                                            </button>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-4x text-muted mb-3 opacity-25"></i>
+                    <h5 class="text-muted mb-3">No Employees Assigned</h5>
+                    <p class="text-muted mb-4">Start by assigning employees to this health area</p>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                    {
+                        <a asp-action="AssignEmployee"
+                           asp-route-healthAreaId="@Model.Id"
+                           class="btn btn-custom btn-gradient">
+                            <i class="fas fa-user-plus me-2"></i>
+                            Assign First Employee
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Remove Confirmation Modal -->
+@if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+{
+    <div class="modal fade" id="removeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                        Confirm Remove
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to remove <strong id="removeEmployeeName"></strong> from this health area?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                    <form id="removeForm" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="healthAreaId" value="@Model.Id" />
+                        <input type="hidden" name="employeeId" id="removeEmployeeId" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-user-times me-2"></i>Remove
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function confirmRemove(employeeId, employeeName) {
+            document.getElementById('removeEmployeeName').textContent = employeeName;
+            document.getElementById('removeEmployeeId').value = employeeId;
+            document.getElementById('removeForm').action = '@Url.Action("RemoveEmployee", "Dashboard")';
+            new bootstrap.Modal(document.getElementById('removeModal')).show();
+        }
+    </script>
+}

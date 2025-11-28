@@ -1,0 +1,266 @@
+﻿@using DnTech_PBS_UniformManagement.Models.Entities
+@using DnTech_PBS_UniformManagement.ViewModels
+@model AssignEmployeeViewModel
+@{
+    ViewData["Title"] = "Assign Employee";
+    var healthArea = ViewBag.HealthArea as HealthArea;
+    var employees = ViewBag.Employees as List<ApplicationUser>;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-custom">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="auth-logo d-inline-flex mb-3" style="background: var(--accent-color);">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h2 class="text-gradient">Assign Employee</h2>
+                        <p class="text-muted mb-1">Add an employee to this health area</p>
+                        @if (healthArea != null)
+                        {
+                            <p class="mb-0">
+                                <span class="badge" style="background: var(--gradient-1);">
+                                    <i class="fas fa-hospital me-1"></i>
+                                    @healthArea.Name - @healthArea.Province.Name
+                                </span>
+                            </p>
+                        }
+                    </div>
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <ul class="mb-0">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <form asp-action="AssignEmployee" method="post" id="assignForm">
+                        <input type="hidden" asp-for="HealthAreaId" />
+
+                        <!-- Tabs -->
+                        <ul class="nav nav-pills mb-4 justify-content-center" id="assignTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active"
+                                        id="existing-tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#existing"
+                                        type="button"
+                                        role="tab">
+                                    <i class="fas fa-user-check me-2"></i>
+                                    Select Existing Employee
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link"
+                                        id="new-tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#new"
+                                        type="button"
+                                        role="tab">
+                                    <i class="fas fa-user-plus me-2"></i>
+                                    Create New Employee
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="assignTabContent">
+                            <!-- Select Existing Employee -->
+                            <div class="tab-pane fade show active" id="existing" role="tabpanel">
+                                <div class="mb-3">
+                                    <label asp-for="EmployeeId" class="form-label">
+                                        <i class="fas fa-user me-2"></i>Select Employee
+                                    </label>
+                                    <select asp-for="EmployeeId" class="form-control" id="employeeSelect">
+                                        <option value="">-- Select an employee --</option>
+                                        @if (employees != null && employees.Any())
+                                        {
+                                            @foreach (var employee in employees)
+                                            {
+                                                <option value="@employee.Id">
+                                                    @employee.Fullname - @employee.Email @(!string.IsNullOrEmpty(employee.IdCard) ? $"({employee.IdCard})" : "")
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                                </div>
+
+                                @if (employees == null || !employees.Any())
+                                {
+                                    <div class="alert alert-warning" role="alert">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        No available employees found. Create a new employee or assign the Employee role to existing users.
+                                    </div>
+                                }
+
+                                <div class="d-grid gap-2 mt-4">
+                                    <button type="submit" class="btn btn-custom btn-gradient" id="assignExistingBtn">
+                                        <i class="fas fa-user-check me-2"></i>
+                                        Assign Employee
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Create New Employee -->
+                            <div class="tab-pane fade" id="new" role="tabpanel">
+                                <input type="hidden" asp-for="CreateNewEmployee" id="createNewInput" value="false" />
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label asp-for="NewEmployeeFullname" class="form-label">
+                                                <i class="fas fa-user me-2"></i>Full Name
+                                            </label>
+                                            <input asp-for="NewEmployeeFullname"
+                                                   class="form-control"
+                                                   placeholder="Enter full name" />
+                                            <span asp-validation-for="NewEmployeeFullname" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="NewEmployeeEmail" class="form-label">
+                                                <i class="fas fa-envelope me-2"></i>Email
+                                            </label>
+                                            <input asp-for="NewEmployeeEmail"
+                                                   type="email"
+                                                   class="form-control"
+                                                   placeholder="Enter email" />
+                                            <span asp-validation-for="NewEmployeeEmail" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="NewEmployeeIdCard" class="form-label">
+                                                <i class="fas fa-id-card me-2"></i>ID Card (Optional)
+                                            </label>
+                                            <input asp-for="NewEmployeeIdCard"
+                                                   class="form-control"
+                                                   placeholder="Enter ID card" />
+                                            <span asp-validation-for="NewEmployeeIdCard" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label asp-for="NewEmployeePassword" class="form-label">
+                                                <i class="fas fa-lock me-2"></i>Password
+                                            </label>
+                                            <div class="position-relative">
+                                                <input asp-for="NewEmployeePassword"
+                                                       class="form-control pe-5"
+                                                       placeholder="Enter password"
+                                                       type="password"
+                                                       id="newPasswordField" />
+                                                <button type="button"
+                                                        class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-decoration-none p-0 pe-3"
+                                                        onclick="togglePassword('newPasswordField', 'toggleIcon')"
+                                                        tabindex="-1"
+                                                        style="z-index: 10; border: none; background: none;">
+                                                    <i class="fas fa-eye" id="toggleIcon" style="color: #94a3b8;"></i>
+                                                </button>
+                                            </div>
+                                            <span asp-validation-for="NewEmployeePassword" class="text-danger"></span>
+                                            <small class="text-muted">Min 6 characters, uppercase, lowercase, and digit</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2 mt-4">
+                                    <button type="submit" class="btn btn-custom btn-gradient" id="createNewBtn">
+                                        <i class="fas fa-user-plus me-2"></i>
+                                        Create & Assign Employee
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Common Actions -->
+                        <div class="d-grid gap-2 mt-3">
+                            <a asp-action="HealthAreaDetails"
+                               asp-route-id="@Model.HealthAreaId"
+                               class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Back to Health Area
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function togglePassword(fieldId, iconId) {
+            const passwordField = document.getElementById(fieldId);
+            const toggleIcon = document.getElementById(iconId);
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Handle tab switching
+        document.getElementById('existing-tab').addEventListener('click', function() {
+            document.getElementById('createNewInput').value = 'false';
+            document.getElementById('employeeSelect').required = true;
+
+            // Clear new employee fields requirements
+            document.getElementById('NewEmployeeFullname').required = false;
+            document.getElementById('NewEmployeeEmail').required = false;
+            document.getElementById('NewEmployeePassword').required = false;
+        });
+
+        document.getElementById('new-tab').addEventListener('click', function() {
+            document.getElementById('createNewInput').value = 'true';
+            document.getElementById('employeeSelect').required = false;
+            document.getElementById('employeeSelect').value = '';
+
+            // Set new employee fields as required
+            document.getElementById('NewEmployeeFullname').required = true;
+            document.getElementById('NewEmployeeEmail').required = true;
+            document.getElementById('NewEmployeePassword').required = true;
+        });
+
+        // Form submission handling
+        document.getElementById('assignForm').addEventListener('submit', function(e) {
+            const activeTab = document.querySelector('#assignTabs .nav-link.active').id;
+            const submitBtn = activeTab === 'existing-tab' ?
+                document.getElementById('assignExistingBtn') :
+                document.getElementById('createNewBtn');
+
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+            submitBtn.disabled = true;
+
+            // If validation fails, restore button
+            setTimeout(function() {
+                if (document.querySelectorAll('.field-validation-error').length > 0) {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            }, 100);
+        });
+    </script>
+}

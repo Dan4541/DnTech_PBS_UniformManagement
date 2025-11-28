@@ -335,6 +335,29 @@ body {
     user-select: none;
 }
 
+/*===== provincias =====*/
+.province-item:last-child {
+    border-bottom: none !important;
+}
+
+.province-header:hover {
+    background-color: #f8fafc;
+}
+
+.province-toggle {
+    transition: transform 0.3s ease;
+}
+
+.province-content {
+    border-top: 1px solid #e2e8f0;
+}
+
+.table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+
+
 /* ===== Alertas y Validación ===== */
 .text-danger {
     color: #ef4444;

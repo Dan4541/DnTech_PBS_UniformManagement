@@ -219,4 +219,5 @@ C:\Users\Danny\source\repos\DnTech_PBS_UniformManagement\DnTech_PBS_UniformManag
 C:\Users\Danny\source\repos\DnTech_PBS_UniformManagement\DnTech_PBS_UniformManagement\obj\Debug\net9.0\DnTech_PBS_UniformManagement.pdb
 C:\Users\Danny\source\repos\DnTech_PBS_UniformManagement\DnTech_PBS_UniformManagement\obj\Debug\net9.0\DnTech_PBS_UniformManagement.genruntimeconfig.cache
 C:\Users\Danny\source\repos\DnTech_PBS_UniformManagement\DnTech_PBS_UniformManagement\obj\Debug\net9.0\ref\DnTech_PBS_UniformManagement.dll
-C:\Users\Danny\source\repos\DnTech_PBS_UniformManagement\DnTech_PBS_UniformManagement\obj\Debug\net9.0\compressed\1zsnc3kkql-{0}-z8pordvui6-z8pordvui6.gz
+C:\Users\Danny\source\repos\DnTech_PBS_UniformManagement\DnTech_PBS_UniformManagement\obj\Debug\net9.0\DnTech_PBS_UniformManagement.sourcelink.json
+C:\Users\Danny\source\repos\DnTech_PBS_UniformManagement\DnTech_PBS_UniformManagement\obj\Debug\net9.0\compressed\1zsnc3kkql-{0}-40uleaet1f-40uleaet1f.gz
