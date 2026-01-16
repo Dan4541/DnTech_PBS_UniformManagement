@@ -86,6 +86,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXENyZWF0ZVByb3ZpbmNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Dashboard/EditHealthArea.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEVkaXRIZWFsdGhBcmVhLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Dashboard/EditProvince.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEVkaXRQcm92aW5jZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Danny/source/repos/DnTech_PBS_UniformManagement/DnTech_PBS_UniformManagement/Views/Dashboard/HealthAreaDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEhlYWx0aEFyZWFEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

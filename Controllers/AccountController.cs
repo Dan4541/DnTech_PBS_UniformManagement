@@ -122,6 +122,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
         // LOGOUT
         // ============================================
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {

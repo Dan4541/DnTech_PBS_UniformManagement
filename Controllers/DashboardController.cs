@@ -63,14 +63,14 @@ namespace DnTech_PBS_UniformManagement.Controllers
         // PROVINCES
         // ============================================
         [HttpGet]
-        [Authorize(Roles = "Administrator,Supervisor")]
+        //[Authorize(Roles = "Administrator,Supervisor")]
         public IActionResult CreateProvince()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator,Supervisor")]
+        //[Authorize(Roles = "Administrator,Supervisor")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProvince(CreateProvinceViewModel model)
         {
@@ -97,7 +97,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
         // HEALTH AREAS
         // ============================================
         [HttpGet]
-        [Authorize(Roles = "Administrator,Supervisor")]
+        //[Authorize(Roles = "Administrator,Supervisor")]
         public async Task<IActionResult> CreateHealthArea(int provinceId)
         {
             var province = await _context.Provinces.FindAsync(provinceId);
@@ -116,7 +116,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator,Supervisor")]
+        //[Authorize(Roles = "Administrator,Supervisor")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateHealthArea(CreateHealthAreaViewModel model)
         {
@@ -163,7 +163,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
         // ASSIGN EMPLOYEES
         // ============================================
         [HttpGet]
-        [Authorize(Roles = "Administrator,Supervisor")]
+        //[Authorize(Roles = "Administrator,Supervisor")]
         public async Task<IActionResult> AssignEmployee(int healthAreaId)
         {
             var healthArea = await _context.HealthAreas
@@ -199,7 +199,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator,Supervisor")]
+        //[Authorize(Roles = "Administrator,Supervisor")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignEmployee(AssignEmployeeViewModel model)
         {
@@ -286,7 +286,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator,Supervisor")]
+        //[Authorize(Roles = "Administrator,Supervisor")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveEmployee(string employeeId, int healthAreaId)
         {
@@ -303,7 +303,216 @@ namespace DnTech_PBS_UniformManagement.Controllers
             return RedirectToAction("HealthAreaDetails", new { id = healthAreaId });
         }
 
+        //******************************NUEVOS********************************//
+        // ============================================
+        // EDIT PROVINCE (Solo Administrator)
+        // ============================================
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> EditProvince(int id)
+        {
+            var province = await _context.Provinces.FindAsync(id);
+            if (province == null)
+            {
+                return NotFound();
+            }
 
+            var model = new CreateProvinceViewModel
+            {
+                Name = province.Name,
+                Code = province.Code
+            };
+
+            ViewBag.ProvinceId = id;
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProvince(int id, CreateProvinceViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var province = await _context.Provinces.FindAsync(id);
+                if (province == null)
+                {
+                    return NotFound();
+                }
+
+                province.Name = model.Name;
+                province.Code = model.Code;
+
+                _context.Provinces.Update(province);
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = "Province updated successfully!";
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.ProvinceId = id;
+            return View(model);
+        }
+
+        // ============================================
+        // DELETE PROVINCE (Solo Administrator)
+        // ============================================
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProvince(int id)
+        {
+            var province = await _context.Provinces
+                .Include(p => p.HealthAreas)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (province == null)
+            {
+                return NotFound();
+            }
+
+            // Validar que no tenga áreas de salud
+            if (province.HealthAreas.Any())
+            {
+                TempData["Error"] = "Cannot delete province with health areas. Please remove all health areas first.";
+                return RedirectToAction("Index");
+            }
+
+            _context.Provinces.Remove(province);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Province deleted successfully!";
+            return RedirectToAction("Index");
+        }
+
+        // ============================================
+        // EDIT HEALTH AREA (Solo Administrator)
+        // ============================================
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> EditHealthArea(int id)
+        {
+            var healthArea = await _context.HealthAreas
+                .Include(h => h.Province)
+                .FirstOrDefaultAsync(h => h.Id == id);
+
+            if (healthArea == null)
+            {
+                return NotFound();
+            }
+
+            var model = new CreateHealthAreaViewModel
+            {
+                Name = healthArea.Name,
+                Code = healthArea.Code,
+                ProvinceId = healthArea.ProvinceId,
+                ProvinceName = healthArea.Province.Name
+            };
+
+            ViewBag.HealthAreaId = id;
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditHealthArea(int id, CreateHealthAreaViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var healthArea = await _context.HealthAreas.FindAsync(id);
+                if (healthArea == null)
+                {
+                    return NotFound();
+                }
+
+                healthArea.Name = model.Name;
+                healthArea.Code = model.Code;
+
+                _context.HealthAreas.Update(healthArea);
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = "Health area updated successfully!";
+                return RedirectToAction("Index");
+            }
+
+            var province = await _context.Provinces.FindAsync(model.ProvinceId);
+            model.ProvinceName = province?.Name;
+            ViewBag.HealthAreaId = id;
+            return View(model);
+        }
+
+        // ============================================
+        // DELETE HEALTH AREA (Solo Administrator)
+        // ============================================
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteHealthArea(int id)
+        {
+            var healthArea = await _context.HealthAreas
+                .Include(h => h.EmployeeHealthAreas)
+                .FirstOrDefaultAsync(h => h.Id == id);
+
+            if (healthArea == null)
+            {
+                return NotFound();
+            }
+
+            // Validar que no tenga empleados asignados
+            if (healthArea.EmployeeHealthAreas.Any(e => e.Active))
+            {
+                TempData["Error"] = "Cannot delete health area with assigned employees. Please remove all employees first.";
+                return RedirectToAction("HealthAreaDetails", new { id });
+            }
+
+            _context.HealthAreas.Remove(healthArea);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Health area deleted successfully!";
+            return RedirectToAction("Index");
+        }
+
+        // ============================================
+        // TOGGLE ACTIVE STATUS (Solo Administrator)
+        // ============================================
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleProvinceStatus(int id)
+        {
+            var province = await _context.Provinces.FindAsync(id);
+            if (province == null)
+            {
+                return NotFound();
+            }
+
+            province.Active = !province.Active;
+            _context.Provinces.Update(province);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"Province {(province.Active ? "activated" : "deactivated")} successfully!";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleHealthAreaStatus(int id)
+        {
+            var healthArea = await _context.HealthAreas.FindAsync(id);
+            if (healthArea == null)
+            {
+                return NotFound();
+            }
+
+            healthArea.Active = !healthArea.Active;
+            _context.HealthAreas.Update(healthArea);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"Health area {(healthArea.Active ? "activated" : "deactivated")} successfully!";
+            return RedirectToAction("HealthAreaDetails", new { id });
+        }
 
 
     }
