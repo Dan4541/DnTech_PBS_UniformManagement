@@ -9,7 +9,7 @@ namespace DnTech_PBS_UniformManagement.Data.Configurations
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             // Properties
-            builder.Property(u => u.Fullname)
+            builder.Property(u => u.FullName)
                 .IsRequired()
                 .HasMaxLength(200);
 

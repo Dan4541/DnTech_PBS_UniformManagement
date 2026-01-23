@@ -115,7 +115,7 @@
                             @foreach (var assignment in Model.EmployeeHealthAreas.Where(e => e.Active))
                             {
                                 <tr>
-                                    <td class="fw-bold">@assignment.Employee.Fullname</td>
+                                    <td class="fw-bold">@assignment.Employee.FullName</td>
                                     <td>@assignment.Employee.Email</td>
                                     <td>@(assignment.Employee.IdCard ?? "N/A")</td>
                                     <td>@assignment.AssignedAt.ToString("MMM dd, yyyy")</td>
@@ -124,7 +124,7 @@
                                         <td class="text-center">
                                             <button type="button"
                                                     class="btn btn-sm btn-outline-danger"
-                                                    onclick="confirmRemove('@assignment.EmployeeId', '@assignment.Employee.Fullname')"
+                                                    onclick="confirmRemove('@assignment.EmployeeId', '@assignment.Employee.FullName')"
                                                     title="Remove Employee">
                                                 <i class="fas fa-user-times"></i>
                                             </button>

@@ -86,7 +86,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
                 {
                     UserName = model.Email,
                     Email = model.Email,
-                    Fullname = model.Fullname,
+                    FullName = model.Fullname,
                     IdCard = model.IdCard,
                     EmailConfirmed = true,
                     Active = true
@@ -145,7 +145,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
 
             var model = new EditProfileViewModel
             {
-                Fullname = user.Fullname,
+                Fullname = user.FullName,
                 IdCard = user.IdCard,
                 Email = user.Email
             };
@@ -166,7 +166,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
                     return NotFound();
                 }
 
-                user.Fullname = model.Fullname;
+                user.FullName = model.Fullname;
                 user.IdCard = model.IdCard;
                 user.Email = model.Email;
 
@@ -244,7 +244,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
                 userViewModels.Add(new UserManagementViewModel
                 {
                     Id = user.Id,
-                    Fullname = user.Fullname,
+                    Fullname = user.FullName,
                     Email = user.Email,
                     IdCard = user.IdCard,
                     Active = user.Active,
@@ -277,7 +277,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
             var model = new EditUserViewModel
             {
                 Id = user.Id,
-                Fullname = user.Fullname,
+                Fullname = user.FullName,
                 Email = user.Email,
                 IdCard = user.IdCard,
                 Active = user.Active,
@@ -302,7 +302,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
                 }
 
                 // Actualizar información básica
-                user.Fullname = model.Fullname;
+                user.FullName = model.Fullname;
                 user.Email = model.Email;
                 user.Active = model.Active;
 

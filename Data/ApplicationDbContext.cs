@@ -12,6 +12,8 @@ namespace DnTech_PBS_UniformManagement.Data
         public DbSet<Province> Provinces { get; set; }
         public DbSet<HealthArea> HealthAreas { get; set; }
         public DbSet<EmployeeHealthArea> EmployeeHealthAreas { get; set; }
+        public DbSet<UniformDelivery> UniformDeliveries { get; set; }
+        public DbSet<DeliveryDetail> DeliveryDetails { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

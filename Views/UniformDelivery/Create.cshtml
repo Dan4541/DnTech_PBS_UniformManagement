@@ -1,0 +1,270 @@
+﻿@model DnTech_PBS_UniformManagement.ViewModels.CreateUniformDeliveryViewModel
+@{
+    ViewData["Title"] = "Nueva Entrega de Uniformes";
+}
+
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Index" asp-route-healthAreaId="@Model.HealthAreaId">@Model.HealthAreaName</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Nueva Entrega</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-custom border-0">
+                <div class="card-header bg-gradient text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-tshirt me-2"></i>Nueva Entrega de Uniformes
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Employee Info -->
+                    <div class="alert alert-info mb-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-user me-2"></i>Empleado:</strong>
+                                <p class="mb-1">@Model.EmployeeName</p>
+                            </div>
+                            <div class="col-md-3">
+                                <strong><i class="fas fa-id-card me-2"></i>Cédula:</strong>
+                                <p class="mb-1">@Model.EmployeeIdCard</p>
+                            </div>
+                            <div class="col-md-3">
+                                <strong><i class="fas fa-briefcase me-2"></i>Puesto:</strong>
+                                <p class="mb-1">@Model.EmployeePosition</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form asp-action="Create" method="post" id="deliveryForm">
+                        <input type="hidden" asp-for="EmployeeId" />
+                        <input type="hidden" asp-for="HealthAreaId" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DeliveryDate" class="form-label"></label>
+                                <input asp-for="DeliveryDate" class="form-control" type="date" />
+                                <span asp-validation-for="DeliveryDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NextDeliveryDate" class="form-label"></label>
+                                <input asp-for="NextDeliveryDate" class="form-control" type="date" />
+                                <span asp-validation-for="NextDeliveryDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Observations" class="form-label"></label>
+                            <textarea asp-for="Observations" class="form-control" rows="3"
+                                      placeholder="Observaciones adicionales sobre la entrega..."></textarea>
+                            <span asp-validation-for="Observations" class="text-danger"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Items Section -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list me-2"></i>Prendas a Entregar
+                            </h5>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="addItem()">
+                                <i class="fas fa-plus me-1"></i>Agregar Prenda
+                            </button>
+                        </div>
+
+                        <div id="itemsContainer">
+                            @for (int i = 0; i < Model.Items.Count; i++)
+                            {
+                                <div class="item-row card mb-3" data-index="@i">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Tipo de Prenda</label>
+                                                <select name="Items[@i].GarmentType" class="form-select" required>
+                                                    <option value="">Seleccione...</option>
+                                                    <option value="Camisa">Camisa</option>
+                                                    <option value="Pantalón">Pantalón</option>
+                                                    <option value="Blusa">Blusa</option>
+                                                    <option value="Falda">Falda</option>
+                                                    <option value="Zapatos">Zapatos</option>
+                                                    <option value="Delantal">Delantal</option>
+                                                    <option value="Gorra">Gorra</option>
+                                                    <option value="Chaleco">Chaleco</option>
+                                                    <option value="Otros">Otros</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label class="form-label">Talla</label>
+                                                <select name="Items[@i].Size" class="form-select" required>
+                                                    <option value="">Seleccione...</option>
+                                                    <optgroup label="Tallas Letras">
+                                                        <option value="XS">XS</option>
+                                                        <option value="S">S</option>
+                                                        <option value="M">M</option>
+                                                        <option value="L">L</option>
+                                                        <option value="XL">XL</option>
+                                                        <option value="XXL">XXL</option>
+                                                        <option value="XXXL">XXXL</option>
+                                                    </optgroup>
+                                                    <optgroup label="Tallas Zapatos">
+                                                        <option value="35">35</option>
+                                                        <option value="36">36</option>
+                                                        <option value="37">37</option>
+                                                        <option value="38">38</option>
+                                                        <option value="39">39</option>
+                                                        <option value="40">40</option>
+                                                        <option value="41">41</option>
+                                                        <option value="42">42</option>
+                                                        <option value="43">43</option>
+                                                        <option value="44">44</option>
+                                                        <option value="45">45</option>
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-2 mb-3">
+                                                <label class="form-label">Cantidad</label>
+                                                <input name="Items[@i].Quantity" type="number" class="form-control"
+                                                       value="1" min="1" max="100" required />
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label class="form-label">&nbsp;</label>
+                                                <button type="button" class="btn btn-danger w-100"
+                                                        onclick="removeItem(this)">
+                                                    <i class="fas fa-trash me-1"></i>Quitar
+                                                </button>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label class="form-label">Notas (Opcional)</label>
+                                                <input name="Items[@i].Notes" type="text" class="form-control"
+                                                       placeholder="Ej: Color azul, talla ajustada..." />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-custom btn-gradient">
+                                <i class="fas fa-save me-2"></i>Registrar Entrega
+                            </button>
+                            <a asp-action="Index" asp-route-healthAreaId="@Model.HealthAreaId"
+                               class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        let itemIndex = @Model.Items.Count;
+
+        function addItem() {
+            const container = document.getElementById('itemsContainer');
+            const newItem = `
+                <div class="item-row card mb-3" data-index="${itemIndex}">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Tipo de Prenda</label>
+                                <select name="Items[${itemIndex}].GarmentType" class="form-select" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="Camisa">Camisa</option>
+                                    <option value="Pantalón">Pantalón</option>
+                                    <option value="Blusa">Blusa</option>
+                                    <option value="Falda">Falda</option>
+                                    <option value="Zapatos">Zapatos</option>
+                                    <option value="Delantal">Delantal</option>
+                                    <option value="Gorra">Gorra</option>
+                                    <option value="Chaleco">Chaleco</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Talla</label>
+                                <select name="Items[${itemIndex}].Size" class="form-select" required>
+                                    <option value="">Seleccione...</option>
+                                    <optgroup label="Tallas Letras">
+                                        <option value="XS">XS</option>
+                                        <option value="S">S</option>
+                                        <option value="M">M</option>
+                                        <option value="L">L</option>
+                                        <option value="XL">XL</option>
+                                        <option value="XXL">XXL</option>
+                                        <option value="XXXL">XXXL</option>
+                                    </optgroup>
+                                    <optgroup label="Tallas Zapatos">
+                                        <option value="35">35</option>
+                                        <option value="36">36</option>
+                                        <option value="37">37</option>
+                                        <option value="38">38</option>
+                                        <option value="39">39</option>
+                                        <option value="40">40</option>
+                                        <option value="41">41</option>
+                                        <option value="42">42</option>
+                                        <option value="43">43</option>
+                                        <option value="44">44</option>
+                                        <option value="45">45</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="form-label">Cantidad</label>
+                                <input name="Items[${itemIndex}].Quantity" type="number" class="form-control"
+                                       value="1" min="1" max="100" required />
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">&nbsp;</label>
+                                <button type="button" class="btn btn-danger w-100" onclick="removeItem(this)">
+                                    <i class="fas fa-trash me-1"></i>Quitar
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notas (Opcional)</label>
+                                <input name="Items[${itemIndex}].Notes" type="text" class="form-control"
+                                       placeholder="Ej: Color azul, talla ajustada..." />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newItem);
+            itemIndex++;
+        }
+
+        function removeItem(button) {
+            const itemRow = button.closest('.item-row');
+            const container = document.getElementById('itemsContainer');
+
+            // No permitir eliminar si es el último item
+            if (container.children.length <= 1) {
+                alert('Debe haber al menos una prenda en la entrega.');
+                return;
+            }
+
+            itemRow.remove();
+        }
+    </script>
+}

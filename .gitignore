@@ -1,39 +1,51 @@
-# Directorios de compilación
-## Directorios generados por .NET/Visual Studio
+# === Directorios de Compilación y Salida ===
 [Bb]in/
 [Oo]bj/
 [Dd]ebug/
 [Rr]elease/
+publish/
+TestResults/
 **/[Tt]emp/
 
-# NuGet: Paquetes y Caché
-## Directorio de caché de paquetes (puede ser distinto en versiones antiguas, pero esta es la moderna)
+# === IDEs (Visual Studio, VS Code, Rider) ===
 .vs/
 .vscode/
+.idea/
+*.suo
+*.user
+*.userossc
+*.sln.docstates
+*.vssscc
+*.vspscc
 
-# Paquetes NuGet, si se descargan localmente (no recomendado, pero ocurre)
+# === NuGet y Dependencias ===
 packages/
-
-# Archivos de caché de herramientas .NET (ej. dotnet tool install)
+# Evitar subir el caché de herramientas locales
 .config/dotnet-tools.json
 .config/dotnet-tools.rsp
 
-# Logs y Archivos de Base de Datos
+# === Archivos de Configuración y Secretos (MUY IMPORTANTE) ===
+# No subas secretos de desarrollo ni variables de entorno
+.env
+appsettings.Development.json
+# Nota: Si necesitas compartir la estructura, crea un 'appsettings.Development.Template.json' sin datos reales.
+
+# === Logs y Bases de Datos ===
 *.log
 *.sqlite
 *.db
+*.db-shm
+*.db-wal
 
-# Archivos de configuración de usuario y específicos de IDE
-## Visual Studio
-*.suo
-*.user
-*.vssscc
-*.vspscc
-## Rider/JetBrains IDEs (opcional)
-.idea/
-
-# Archivos generados automáticamente por ASP.NET Core
-## Archivos de recursos web estáticos (ej. si usas Node/npm/Webpack para front-end)
+# === Web / Front-end (Node, npm, Webpack) ===
+node_modules/
 wwwroot/lib/
 wwwroot/dist/
-node_modules/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# === Archivos del Sistema Operativo ===
+.DS_Store
+Thumbs.db

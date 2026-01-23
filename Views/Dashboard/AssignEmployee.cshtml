@@ -84,7 +84,7 @@
                                             @foreach (var employee in employees)
                                             {
                                                 <option value="@employee.Id">
-                                                    @employee.Fullname - @employee.Email @(!string.IsNullOrEmpty(employee.IdCard) ? $"({employee.IdCard})" : "")
+                                                    @employee.FullName - @employee.Email @(!string.IsNullOrEmpty(employee.IdCard) ? $"({employee.IdCard})" : "")
                                                 </option>
                                             }
                                         }

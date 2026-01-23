@@ -218,7 +218,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
                     {
                         UserName = model.NewEmployeeEmail,
                         Email = model.NewEmployeeEmail,
-                        Fullname = model.NewEmployeeFullname,
+                        FullName = model.NewEmployeeFullname,
                         IdCard = model.NewEmployeeIdCard,
                         EmailConfirmed = true,
                         Active = true

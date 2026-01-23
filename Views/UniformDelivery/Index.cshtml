@@ -1,0 +1,227 @@
+﻿@using DnTech_PBS_UniformManagement.ViewModels
+@model List<EmployeeWithUniformsViewModel>
+@{
+    ViewData["Title"] = "Gestión de Uniformes";
+}
+
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">@ViewBag.ProvinceName</li>
+            <li class="breadcrumb-item active" aria-current="page">@ViewBag.HealthAreaName</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-gradient mb-1">
+                <i class="fas fa-tshirt me-2"></i>@ViewBag.HealthAreaName
+            </h2>
+            <p class="text-muted mb-0">
+                <i class="fas fa-barcode me-1"></i>
+                Código: @ViewBag.HealthAreaCode |
+                <i class="fas fa-users me-1"></i>
+                @Model.Count empleado@(Model.Count != 1 ? "s" : "")
+            </p>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Employees Table -->
+    @if (Model.Any())
+    {
+        <div class="card shadow-custom border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="employeesTable">
+                        <thead class="bg-light">
+                            <tr>
+                                <th><i class="fas fa-user me-2"></i>Empleado</th>
+                                <th><i class="fas fa-id-card me-2"></i>Cédula</th>
+                                <th><i class="fas fa-briefcase me-2"></i>Puesto</th>
+                                <th><i class="fas fa-calendar me-2"></i>Última Entrega</th>
+                                <th><i class="fas fa-calendar-alt me-2"></i>Próxima Entrega</th>
+                                <th><i class="fas fa-info-circle me-2"></i>Estado</th>
+                                <th class="text-center"><i class="fas fa-cog me-2"></i>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var employee in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="rounded-circle me-2 d-flex align-items-center justify-content-center"
+                                                 style="width: 35px; height: 35px; background: var(--gradient-1);">
+                                                <i class="fas fa-user text-white"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold">@employee.FullName</div>
+                                                <small class="text-muted">@employee.Email</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(employee.IdCard))
+                                        {
+                                            <span class="badge bg-secondary">@employee.IdCard</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (employee.Position == "Oficinista")
+                                        {
+                                            <span class="badge" style="background: var(--primary-color);">
+                                                <i class="fas fa-desktop me-1"></i>Oficinista
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge" style="background: var(--secondary-color);">
+                                                <i class="fas fa-broom me-1"></i>Misceláneo
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (employee.LastDeliveryDate.HasValue)
+                                        {
+                                            <span>@employee.LastDeliveryDate.Value.ToString("dd/MM/yyyy")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Sin registro</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (employee.NextDeliveryDate.HasValue)
+                                        {
+                                            <span>@employee.NextDeliveryDate.Value.ToString("dd/MM/yyyy")</span>
+                                            @if (employee.DaysUntilNextDelivery.HasValue)
+                                            {
+                                                <br>
+                                                <small class="text-muted">
+                                                    (@employee.DaysUntilNextDelivery días)
+                                                </small>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (employee.DeliveryStatus == "Entregado")
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>Entregado
+                                            </span>
+                                        }
+                                        else if (employee.DeliveryStatus == "Próximo")
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fas fa-clock me-1"></i>Próximo
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-times-circle me-1"></i>Sin entrega
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                                            {
+                                                <a asp-action="Create"
+                                                   asp-route-employeeId="@employee.EmployeeId"
+                                                   asp-route-healthAreaId="@employee.HealthAreaId"
+                                                   class="btn btn-outline-primary"
+                                                   title="Nueva Entrega">
+                                                    <i class="fas fa-plus"></i>
+                                                </a>
+                                            }
+                                            <a asp-action="History"
+                                               asp-route-employeeId="@employee.EmployeeId"
+                                               asp-route-healthAreaId="@employee.HealthAreaId"
+                                               class="btn btn-outline-info"
+                                               title="Ver Historial">
+                                                <i class="fas fa-history"></i>
+                                            </a>
+                                            @if (employee.LastDeliveryId.HasValue)
+                                            {
+                                                <a asp-action="Details"
+                                                   asp-route-id="@employee.LastDeliveryId"
+                                                   class="btn btn-outline-success"
+                                                   title="Ver Última Entrega">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-custom border-0">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-users fa-4x text-muted mb-4 opacity-25"></i>
+                <h4 class="text-muted mb-3">No hay empleados asignados</h4>
+                <p class="text-muted mb-4">Agrega empleados a esta área de salud para gestionar sus uniformes</p>
+                <a asp-controller="Dashboard" asp-action="AssignEmployee"
+                   asp-route-healthAreaId="@ViewBag.HealthAreaId"
+                   class="btn btn-custom btn-gradient">
+                    <i class="fas fa-user-plus me-2"></i>Asignar Empleado
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#employeesTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json"
+                },
+                "order": [[0, "asc"]],
+                "pageLength": 10
+            });
+        });
+    </script>
+}
