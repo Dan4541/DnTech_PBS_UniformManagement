@@ -1,0 +1,237 @@
+﻿@model DnTech_PBS_UniformManagement.ViewModels.EmployeeDeliveriesViewModel
+@{
+    ViewData["Title"] = "Historial de Entregas";
+}
+
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">@Model.ProvinceName</li>
+            <li class="breadcrumb-item">
+                <a asp-action="Index" asp-route-healthAreaId="@Model.HealthAreaId">@Model.HealthAreaName</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Historial</li>
+        </ol>
+    </nav>
+
+    <!-- Header with Employee Info -->
+    <div class="card shadow-custom border-0 mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle me-3 d-flex align-items-center justify-content-center"
+                             style="width: 60px; height: 60px; background: var(--gradient-1);">
+                            <i class="fas fa-user fa-2x text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="mb-1">@Model.EmployeeName</h3>
+                            <div class="d-flex gap-3 flex-wrap">
+                                @if (!string.IsNullOrEmpty(Model.EmployeeIdCard))
+                                {
+                                    <span class="text-muted">
+                                        <i class="fas fa-id-card me-1"></i>
+                                        @Model.EmployeeIdCard
+                                    </span>
+                                }
+                                <span class="text-muted">
+                                    <i class="fas fa-briefcase me-1"></i>
+                                    @Model.EmployeePosition
+                                </span>
+                                <span class="text-muted">
+                                    <i class="fas fa-hospital me-1"></i>
+                                    @Model.HealthAreaName
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                    {
+                        <a asp-action="Create"
+                           asp-route-employeeId="@Model.EmployeeId"
+                           asp-route-healthAreaId="@Model.HealthAreaId"
+                           class="btn btn-custom btn-gradient">
+                            <i class="fas fa-plus me-2"></i>Nueva Entrega
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Total Entregas</h6>
+                            <h2 class="mb-0 fw-bold">@Model.Deliveries.Count</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(6, 182, 212, 0.1);">
+                            <i class="fas fa-box fa-2x" style="color: var(--primary-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Última Entrega</h6>
+                            <h5 class="mb-0 fw-bold">
+                                @if (Model.Deliveries.Any())
+                                {
+                                    @Model.Deliveries.First().DeliveryDate.ToString("dd/MM/yyyy")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </h5>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(16, 185, 129, 0.1);">
+                            <i class="fas fa-calendar fa-2x" style="color: var(--secondary-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-custom border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Total Prendas</h6>
+                            <h2 class="mb-0 fw-bold">@Model.Deliveries.Sum(d => d.ItemsCount)</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(20, 184, 166, 0.1);">
+                            <i class="fas fa-tshirt fa-2x" style="color: var(--accent-color);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Timeline -->
+    <div class="card shadow-custom border-0">
+        <div class="card-header bg-gradient text-white">
+            <h4 class="mb-0">
+                <i class="fas fa-history me-2"></i>Historial de Entregas
+            </h4>
+        </div>
+        <div class="card-body p-4">
+            @if (Model.Deliveries.Any())
+            {
+                <div class="timeline">
+                    @foreach (var delivery in Model.Deliveries)
+                    {
+                        <div class="timeline-item mb-4 pb-4 border-bottom">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="timeline-date">
+                                        <h5 class="mb-1">
+                                            <i class="fas fa-calendar-day me-2" style="color: var(--primary-color);"></i>
+                                            @delivery.DeliveryDate.ToString("dd/MM/yyyy")
+                                        </h5>
+                                        <small class="text-muted">
+                                            @delivery.DeliveryDate.ToString("dddd", new System.Globalization.CultureInfo("es-ES"))
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="timeline-content">
+                                        <div class="mb-2">
+                                            @if (delivery.Status == "Entregado")
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check-circle me-1"></i>Entregado
+                                                </span>
+                                            }
+                                            else if (delivery.Status == "Próximo")
+                                            {
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="fas fa-clock me-1"></i>Próximo
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-times-circle me-1"></i>Sin entrega
+                                                </span>
+                                            }
+                                            <span class="badge bg-secondary ms-2">
+                                                <i class="fas fa-tshirt me-1"></i>
+                                                @delivery.ItemsCount @(delivery.ItemsCount == 1 ? "prenda" : "prendas")
+                                            </span>
+                                        </div>
+                                        @if (delivery.NextDeliveryDate.HasValue)
+                                        {
+                                            <div class="text-muted">
+                                                <i class="fas fa-calendar-check me-1"></i>
+                                                Próxima entrega: @delivery.NextDeliveryDate.Value.ToString("dd/MM/yyyy")
+                                                @if (delivery.DaysUntilNextDelivery.HasValue)
+                                                {
+                                                    <span class="badge bg-info ms-1">
+                                                        En @delivery.DaysUntilNextDelivery días
+                                                    </span>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-md-3 text-md-end mt-3 mt-md-0">
+                                    <a asp-action="Details"
+                                       asp-route-id="@delivery.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye me-1"></i>Ver Detalles
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-inbox fa-4x text-muted mb-3 opacity-25"></i>
+                    <h4 class="text-muted mb-3">No hay entregas registradas</h4>
+                    <p class="text-muted mb-4">Este empleado aún no tiene entregas de uniformes registradas.</p>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                    {
+                        <a asp-action="Create"
+                           asp-route-employeeId="@Model.EmployeeId"
+                           asp-route-healthAreaId="@Model.HealthAreaId"
+                           class="btn btn-custom btn-gradient">
+                            <i class="fas fa-plus me-2"></i>Registrar Primera Entrega
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="mt-4">
+        <a asp-action="Index"
+           asp-route-healthAreaId="@Model.HealthAreaId"
+           class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Volver a Lista de Empleados
+        </a>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/uniform-delivery.css" asp-append-version="true" />
+}

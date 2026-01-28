@@ -20,7 +20,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="text-gradient mb-1">
-                <i class="fas fa-tshirt me-2"></i>@ViewBag.HealthAreaName
+                <i class="fas fa-hospital me-2"></i>@ViewBag.HealthAreaName
             </h2>
             <p class="text-muted mb-0">
                 <i class="fas fa-barcode me-1"></i>
@@ -29,9 +29,23 @@
                 @Model.Count empleado@(Model.Count != 1 ? "s" : "")
             </p>
         </div>
-        <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Volver
-        </a>
+        <div class="d-flex gap-2">
+            @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+            {
+                <a asp-controller="Dashboard"
+                   asp-action="AssignEmployee"
+                   asp-route-healthAreaId="@ViewBag.HealthAreaId"
+                   class="btn btn-outline-success">
+                    <i class="fas fa-user-plus me-2"></i>
+                    <span class="d-none d-sm-inline">Assign Employee</span>
+                    <span class="d-inline d-sm-none">Assign</span>
+                </a>
+            }
+            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>
+                <span class="d-none d-sm-inline">Volver</span>
+            </a>
+        </div>
     </div>
 
     @if (TempData["Success"] != null)
@@ -76,8 +90,7 @@
                                 <tr>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <div class="rounded-circle me-2 d-flex align-items-center justify-content-center"
-                                                 style="width: 35px; height: 35px; background: var(--gradient-1);">
+                                            <div class="employee-avatar me-2">
                                                 <i class="fas fa-user text-white"></i>
                                             </div>
                                             <div>
@@ -99,13 +112,13 @@
                                     <td>
                                         @if (employee.Position == "Oficinista")
                                         {
-                                            <span class="badge" style="background: var(--primary-color);">
+                                            <span class="badge badge-oficinista">
                                                 <i class="fas fa-desktop me-1"></i>Oficinista
                                             </span>
                                         }
                                         else
                                         {
-                                            <span class="badge" style="background: var(--secondary-color);">
+                                            <span class="badge badge-miscelaneo">
                                                 <i class="fas fa-broom me-1"></i>Misceláneo
                                             </span>
                                         }
@@ -185,6 +198,15 @@
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                             }
+                                            @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                                            {
+                                                <button type="button"
+                                                        class="btn btn-outline-danger"
+                                                        onclick="confirmRemove('@employee.EmployeeId', '@employee.FullName')"
+                                                        title="Remover Empleado">
+                                                    <i class="fas fa-user-times"></i>
+                                                </button>
+                                            }
                                         </div>
                                     </td>
                                 </tr>
@@ -212,6 +234,48 @@
     }
 </div>
 
+<!-- Remove Employee Modal -->
+@if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+{
+    <div class="modal fade" id="removeModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                        Confirmar Remoción
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro de que desea remover a <strong id="removeEmployeeName"></strong> de esta área de salud?</p>
+                    <div class="alert alert-warning mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Nota:</strong> El empleado y su historial de uniformes serán eliminados.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <form id="removeForm" asp-controller="Dashboard" asp-action="RemoveEmployee" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="healthAreaId" value="@ViewBag.HealthAreaId" />
+                        <input type="hidden" name="employeeId" id="removeEmployeeId" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-user-times me-2"></i>Remover
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/uniform-delivery.css" asp-append-version="true" />
+}
+
 @section Scripts {
     <script>
         $(document).ready(function() {
@@ -223,5 +287,11 @@
                 "pageLength": 10
             });
         });
+
+        function confirmRemove(employeeId, employeeName) {
+            document.getElementById('removeEmployeeName').textContent = employeeName;
+            document.getElementById('removeEmployeeId').value = employeeId;
+            new bootstrap.Modal(document.getElementById('removeModal')).show();
+        }
     </script>
 }

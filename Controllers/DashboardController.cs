@@ -142,23 +142,6 @@ namespace DnTech_PBS_UniformManagement.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> HealthAreaDetails(int id)
-        {
-            var healthArea = await _context.HealthAreas
-                .Include(h => h.Province)
-                .Include(h => h.EmployeeHealthAreas)
-                    .ThenInclude(e => e.Employee)
-                .FirstOrDefaultAsync(h => h.Id == id);
-
-            if (healthArea == null)
-            {
-                return NotFound();
-            }
-
-            return View(healthArea);
-        }
-
         // ============================================
         // ASSIGN EMPLOYEES
         // ============================================

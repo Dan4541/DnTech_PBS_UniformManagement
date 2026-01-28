@@ -1,0 +1,67 @@
+﻿/* ===== Uniform Delivery Styles ===== */
+
+/* Employee Avatar */
+.employee-avatar {
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    background: var(--gradient-1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Position Badges */
+.badge-oficinista {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.badge-miscelaneo {
+    background: var(--secondary-color);
+    color: var(--white);
+}
+
+/* Timeline Styles for History View */
+.timeline-item:last-child {
+    border-bottom: none !important;
+}
+
+.timeline-date h5 {
+    color: var(--text-dark);
+}
+
+.timeline-content {
+    padding-left: 1rem;
+    border-left: 3px solid var(--primary-color);
+}
+
+/* Item Row in Create Form */
+.item-row {
+    transition: all 0.3s ease;
+}
+
+    .item-row:hover {
+        box-shadow: var(--shadow-sm);
+    }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .timeline-content {
+        border-left: none;
+        padding-left: 0;
+        margin-top: 1rem;
+    }
+
+    .employee-avatar {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+    }
+
+    .btn-group-sm > .btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+    }
+}

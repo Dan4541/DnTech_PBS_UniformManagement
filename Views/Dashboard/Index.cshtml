@@ -82,7 +82,7 @@
             </h2>
             <p class="text-muted mb-0 d-none d-sm-block">Manage provinces, health areas and employee assignments</p>
         </div>
-        @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+        @if (User.IsInRole("Administrator"))
         {
             <a asp-action="CreateProvince" class="btn btn-custom btn-gradient w-100 w-md-auto">
                 <i class="fas fa-plus-circle me-2"></i>
@@ -211,8 +211,9 @@
                                                     {
                                                         <tr>
                                                             <td class="ps-3 ps-md-4">
-                                                                <a asp-action="HealthAreaDetails"
-                                                                   asp-route-id="@healthArea.Id"
+                                                                <a asp-controller="UniformDelivery"
+                                                                   asp-action="Index"
+                                                                   asp-route-healthAreaId="@healthArea.Id"
                                                                    class="text-decoration-none fw-bold"
                                                                    style="color: var(--primary-color);">
                                                                     @healthArea.Name
@@ -241,8 +242,9 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 <div class="btn-group btn-group-sm" role="group">
-                                                                    <a asp-action="HealthAreaDetails"
-                                                                       asp-route-id="@healthArea.Id"
+                                                                    <a asp-controller="UniformDelivery"
+                                                                       asp-action="Index"
+                                                                       asp-route-healthAreaId="@healthArea.Id"
                                                                        class="btn btn-outline-primary"
                                                                        title="View Details">
                                                                         <i class="fas fa-eye"></i>

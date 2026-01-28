@@ -186,8 +186,9 @@
 
                         <!-- Common Actions -->
                         <div class="d-grid gap-2 mt-3">
-                            <a asp-action="HealthAreaDetails"
-                               asp-route-id="@Model.HealthAreaId"
+                            <a asp-controller="UniformDelivery"
+                               asp-action="Index"
+                               asp-route-healthAreaId="@Model.HealthAreaId"
                                class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left me-2"></i>
                                 Back to Health Area
