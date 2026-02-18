@@ -1,5 +1,6 @@
 ﻿using DnTech_PBS_UniformManagement.Data;
 using DnTech_PBS_UniformManagement.Models.Entities;
+using DnTech_PBS_UniformManagement.Models.Enums;
 using DnTech_PBS_UniformManagement.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -145,8 +146,9 @@ namespace DnTech_PBS_UniformManagement.Controllers
         // ============================================
         // ASSIGN EMPLOYEES
         // ============================================
+
         [HttpGet]
-        //[Authorize(Roles = "Administrator,Supervisor")]
+        [Authorize(Roles = "Administrator,Supervisor")]
         public async Task<IActionResult> AssignEmployee(int healthAreaId)
         {
             var healthArea = await _context.HealthAreas
@@ -155,34 +157,39 @@ namespace DnTech_PBS_UniformManagement.Controllers
 
             if (healthArea == null)
             {
-                return NotFound();
+                TempData["Error"] = "Health area not found";
+                return RedirectToAction("Index", "Dashboard");
             }
 
-            // Obtener empleados que tienen rol "Employee"
             var employeeRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Employee");
             var employeeIds = await _context.UserRoles
                 .Where(ur => ur.RoleId == employeeRole.Id)
                 .Select(ur => ur.UserId)
                 .ToListAsync();
 
-            var availableEmployees = await _userManager.Users
+            ViewBag.Employees = await _userManager.Users
                 .Where(u => employeeIds.Contains(u.Id) && u.Active)
                 .ToListAsync();
-
-            ViewBag.Employees = availableEmployees;
+            
             ViewBag.HealthArea = healthArea;
+            
+            // CAMBIA ESTO:
+            ViewBag.Positions = new List<object>
+            {
+                new { Value = (int)EmployeePosition.OfficeWorker, Text = "Oficinista" },
+                new { Value = (int)EmployeePosition.Miscellaneous, Text = "Misceláneo" }
+            };
 
             var model = new AssignEmployeeViewModel
             {
-                HealthAreaId = healthAreaId,
-                HealthAreaName = $"{healthArea.Name} - {healthArea.Province.Name}"
+                HealthAreaId = healthAreaId
             };
 
             return View(model);
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Administrator,Supervisor")]
+        [Authorize(Roles = "Administrator,Supervisor")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignEmployee(AssignEmployeeViewModel model)
         {
@@ -191,7 +198,8 @@ namespace DnTech_PBS_UniformManagement.Controllers
                 // Crear nuevo empleado
                 if (string.IsNullOrEmpty(model.NewEmployeeFullname) ||
                     string.IsNullOrEmpty(model.NewEmployeeEmail) ||
-                    string.IsNullOrEmpty(model.NewEmployeePassword))
+                    string.IsNullOrEmpty(model.NewEmployeePassword) ||
+                    model.NewEmployeePosition == null) // NUEVO: Validar posición
                 {
                     ModelState.AddModelError("", "Please fill all required fields for new employee");
                 }
@@ -203,15 +211,28 @@ namespace DnTech_PBS_UniformManagement.Controllers
                         Email = model.NewEmployeeEmail,
                         FullName = model.NewEmployeeFullname,
                         IdCard = model.NewEmployeeIdCard,
+                        Position = (EmployeePosition)model.NewEmployeePosition, // NUEVO
                         EmailConfirmed = true,
                         Active = true
                     };
-
+                    
                     var result = await _userManager.CreateAsync(newEmployee, model.NewEmployeePassword);
                     if (result.Succeeded)
                     {
                         await _userManager.AddToRoleAsync(newEmployee, "Employee");
-                        model.EmployeeId = newEmployee.Id;
+                        
+                        // Asignar automáticamente al área de salud
+                        var assignment = new EmployeeHealthArea
+                        {
+                            EmployeeId = newEmployee.Id,
+                            HealthAreaId = model.HealthAreaId,
+                            Active = true
+                        };
+                        _context.EmployeeHealthAreas.Add(assignment);
+                        await _context.SaveChangesAsync();
+                        
+                        TempData["Success"] = "Employee created and assigned successfully!";
+                        return RedirectToAction("Index", "UniformDelivery", new { healthAreaId = model.HealthAreaId });
                     }
                     else
                     {
@@ -222,49 +243,61 @@ namespace DnTech_PBS_UniformManagement.Controllers
                     }
                 }
             }
-
+            
             if (ModelState.IsValid && !string.IsNullOrEmpty(model.EmployeeId))
             {
                 // Verificar si ya está asignado
                 var exists = await _context.EmployeeHealthAreas
                     .AnyAsync(e => e.EmployeeId == model.EmployeeId && e.HealthAreaId == model.HealthAreaId);
-
+                
                 if (exists)
                 {
                     TempData["Error"] = "Employee is already assigned to this health area";
-                    return RedirectToAction("HealthAreaDetails", new { id = model.HealthAreaId });
+                    return RedirectToAction("AssignEmployee", new { healthAreaId = model.HealthAreaId });
                 }
-
+                
                 var assignment = new EmployeeHealthArea
                 {
                     EmployeeId = model.EmployeeId,
                     HealthAreaId = model.HealthAreaId,
                     Active = true
                 };
-
                 _context.EmployeeHealthAreas.Add(assignment);
                 await _context.SaveChangesAsync();
-
+                
                 TempData["Success"] = "Employee assigned successfully!";
-                return RedirectToAction("HealthAreaDetails", new { id = model.HealthAreaId });
+                return RedirectToAction("Index", "UniformDelivery", new { healthAreaId = model.HealthAreaId });
             }
-
+            
             // Reload data if validation fails
             var healthArea = await _context.HealthAreas
                 .Include(h => h.Province)
                 .FirstOrDefaultAsync(h => h.Id == model.HealthAreaId);
-
+            
             var employeeRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Employee");
             var employeeIds = await _context.UserRoles
                 .Where(ur => ur.RoleId == employeeRole.Id)
                 .Select(ur => ur.UserId)
                 .ToListAsync();
-
+            
             ViewBag.Employees = await _userManager.Users
                 .Where(u => employeeIds.Contains(u.Id) && u.Active)
                 .ToListAsync();
+            
             ViewBag.HealthArea = healthArea;
 
+            ViewBag.Positions = new List<object>
+            {
+                new { Value = (int)EmployeePosition.OfficeWorker, Text = "Oficinista" },
+                new { Value = (int)EmployeePosition.Miscellaneous, Text = "Misceláneo" }
+            };
+            
+            // NUEVO: Recargar posiciones
+            ViewBag.Positions = Enum.GetValues(typeof(EmployeePosition))
+                .Cast<EmployeePosition>()
+                .Select(e => new { Value = (int)e, Text = e.ToString() })
+                .ToList();
+            
             return View(model);
         }
 
@@ -283,7 +316,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
                 TempData["Success"] = "Employee removed from health area";
             }
 
-            return RedirectToAction("HealthAreaDetails", new { id = healthAreaId });
+            return RedirectToAction("Index", "UniformDelivery", new { id = healthAreaId });
         }
 
         //******************************NUEVOS********************************//

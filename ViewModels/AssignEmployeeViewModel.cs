@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using DnTech_PBS_UniformManagement.Models.Enums;
 
 namespace DnTech_PBS_UniformManagement.ViewModels
 {
@@ -30,5 +31,6 @@ namespace DnTech_PBS_UniformManagement.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string? NewEmployeePassword { get; set; }
+        public EmployeePosition? NewEmployeePosition { get; set; } 
     }
 }

@@ -39,7 +39,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
                     FullName = e.Employee != null ? e.Employee.FullName : "",
                     IdCard = e.Employee != null ? e.Employee.IdCard : null,
                     Email = e.Employee != null ? e.Employee.Email : "",
-                    Position = e.Position,
+                    Position = e.Employee != null ? e.Employee.Position : null,
                     AssignedAt = e.AssignedAt,
                     LastDeliveryId = e.UniformDeliveries.OrderByDescending(d => d.DeliveryDate).Select(d => d.Id).FirstOrDefault(),
                     LastDeliveryDate = e.UniformDeliveries.OrderByDescending(d => d.DeliveryDate).Select(d => d.DeliveryDate).FirstOrDefault(),

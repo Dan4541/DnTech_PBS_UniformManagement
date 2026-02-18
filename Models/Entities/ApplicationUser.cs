@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DnTech_PBS_UniformManagement.Models.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace DnTech_PBS_UniformManagement.Models.Entities
 {
@@ -8,5 +9,6 @@ namespace DnTech_PBS_UniformManagement.Models.Entities
         public string? IdCard { get; set; }
         public bool Active { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public EmployeePosition Position { get; set; }
     }
 }

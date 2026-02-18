@@ -124,6 +124,21 @@
                                             <span asp-validation-for="NewEmployeeFullname" class="text-danger"></span>
                                         </div>
                                     </div>
+                                    <!-- Position Field -->
+                                    <div class="form-group mb-3">
+                                        <label asp-for="NewEmployeePosition" class="form-label">
+                                            <i class="fas fa-briefcase"></i> Position
+                                        </label>
+                                        <select asp-for="NewEmployeePosition" class="form-control">
+                                            <option value="">-- Select a position --</option>
+                                            @foreach (var position in ViewBag.Positions)
+                                            {
+                                                <option value="@position.Value">@position.Text</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="NewEmployeePosition" class="text-danger"></span>
+                                    </div>
+
 
                                     <div class="col-md-6">
                                         <div class="mb-3">

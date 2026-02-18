@@ -5,9 +5,9 @@ namespace DnTech_PBS_UniformManagement.Models.Enums
     public enum EmployeePosition
     {
         [Display(Name = "Office worker")]
-        OfficeWorker,
+        OfficeWorker = 1,
 
         [Display(Name = "Miscellaneous")]
-        Miscellaneous
+        Miscellaneous = 2
     }
 }

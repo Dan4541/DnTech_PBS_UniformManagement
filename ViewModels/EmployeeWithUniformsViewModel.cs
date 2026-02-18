@@ -1,4 +1,6 @@
-﻿namespace DnTech_PBS_UniformManagement.ViewModels
+﻿using DnTech_PBS_UniformManagement.Models.Enums;
+
+namespace DnTech_PBS_UniformManagement.ViewModels
 {
     public class EmployeeWithUniformsViewModel
     {
@@ -7,7 +9,7 @@
         public string FullName { get; set; } = string.Empty;
         public string? IdCard { get; set; }
         public string Email { get; set; } = string.Empty;
-        public string Position { get; set; } = string.Empty;
+        public EmployeePosition? Position { get; set; }
         public DateTime AssignedAt { get; set; }
 
         // Información de la última entrega
