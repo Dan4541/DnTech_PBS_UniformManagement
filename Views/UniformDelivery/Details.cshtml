@@ -26,10 +26,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">
                             <i class="fas fa-tshirt me-2"></i>Detalles de Entrega
-                        </h4>
-                        <span class="badge bg-light text-dark">
-                            ID: #@Model.DeliveryId
-                        </span>
+                        </h4>                        
                     </div>
                 </div>
 
@@ -114,29 +111,61 @@
                                             }
                                         </p>
                                     </div>
-                                    <div>
-                                        <strong>Estado:</strong>
-                                        <p class="mb-0">
-                                            @if (Model.Status == "Entregado")
-                                            {
-                                                <span class="badge bg-success">
-                                                    <i class="fas fa-check-circle me-1"></i>Entregado
-                                                </span>
-                                            }
-                                            else if (Model.Status == "Próximo")
-                                            {
-                                                <span class="badge bg-warning text-dark">
-                                                    <i class="fas fa-clock me-1"></i>Próximo
-                                                </span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge bg-secondary">
-                                                    <i class="fas fa-times-circle me-1"></i>Sin entrega
-                                                </span>
-                                            }
-                                        </p>
-                                    </div>
+                                    
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                                    {
+                                        <!-- Selector de estado editable -->
+                                        <div class="mb-0">
+                                            <strong>Estado:</strong>
+                                            <form asp-action="UpdateStatus" method="post" id="statusForm" class="mt-2">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="deliveryId" value="@Model.DeliveryId" />
+                                                <input type="hidden" name="healthAreaId" value="@Model.HealthAreaId" />
+                                                
+                                                <select name="status" class="form-select form-select-sm" id="statusSelect" onchange="document.getElementById('statusForm').submit()">
+                                                    <option value="NotDelivered" selected="@(Model.Status == "Sin entrega")">
+                                                        🔴 Sin entrega
+                                                    </option>
+                                                    <option value="Delivered" selected="@(Model.Status == "Entregado")">
+                                                        ✅ Entregado
+                                                    </option>
+                                                    <option value="Upcoming" selected="@(Model.Status == "Próximo")">
+                                                        ⏰ Próximo
+                                                    </option>
+                                                </select>
+                                                <small class="text-muted d-block mt-1">
+                                                    <i class="fas fa-info-circle"></i> Selecciona para cambiar el estado
+                                                </small>
+                                            </form>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <!-- Solo visualización para empleados -->
+                                        <div class="mb-0">
+                                            <strong>Estado:</strong>
+                                            <p class="mb-0 mt-2">
+                                                @if (Model.Status == "Entregado")
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check-circle me-1"></i>Entregado
+                                                    </span>
+                                                }
+                                                else if (Model.Status == "Próximo")
+                                                {
+                                                    <span class="badge bg-warning text-dark">
+                                                        <i class="fas fa-clock me-1"></i>Próximo
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-times-circle me-1"></i>Sin entrega
+                                                    </span>
+                                                }
+                                            </p>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -299,5 +328,5 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/uniform-delivery.css" asp-append-version="true" />
+    <link rel="stylesheet" href="/css/uniform-delivery.css" asp-append-version="true" />
 }

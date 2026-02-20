@@ -118,15 +118,11 @@ namespace DnTech_PBS_UniformManagement.Controllers
 
             // Determinar estado
             string status = "Sin entrega";
-            if (model.DeliveryDate <= DateTime.Now)
-            {
-                status = "Entregado";
-            }
-            else if (model.NextDeliveryDate.HasValue && model.NextDeliveryDate.Value > DateTime.Now)
+            if (model.DeliveryDate > DateTime.Now.Date)
             {
                 status = "Próximo";
             }
-
+            
             var delivery = new UniformDelivery
             {
                 EmployeeId = model.EmployeeId,
@@ -208,6 +204,35 @@ namespace DnTech_PBS_UniformManagement.Controllers
 
             return View(viewModel);
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator,Supervisor")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateStatus(int deliveryId, string status, int healthAreaId)
+        {
+            var delivery = await _context.UniformDeliveries.FindAsync(deliveryId);
+            
+            if (delivery == null)
+            {
+                TempData["Error"] = "Entrega no encontrada.";
+                return RedirectToAction("Index", new { healthAreaId });
+            }
+
+            // Mapear el valor del enum a string
+            delivery.Status = status switch
+            {
+                "NotDelivered" => "Sin entrega",
+                "Delivered" => "Entregado",
+                "Upcoming" => "Próximo",
+                _ => delivery.Status
+            };
+
+            await _context.SaveChangesAsync();
+            
+            TempData["Success"] = "Estado actualizado correctamente.";
+            return RedirectToAction("Details", new { id = deliveryId });
+        }
+
 
         // GET: Historial de entregas de un empleado
         public async Task<IActionResult> History(string employeeId, int healthAreaId)

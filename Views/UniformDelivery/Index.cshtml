@@ -278,7 +278,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/uniform-delivery.css" asp-append-version="true" />
+    <link rel="stylesheet" href="/css/uniform-delivery.css" asp-append-version="true" />
 }
 
 @section Scripts {
@@ -286,10 +286,10 @@
         $(document).ready(function() {
             $('#employeesTable').DataTable({
                 "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json"
+                    "url": "https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json"
                 },
-                "order": [[0, "asc"]],
-                "pageLength": 10
+                "pageLength": 5,
+                "lengthMenu": [5, 10, 25, 50]
             });
         });
 
