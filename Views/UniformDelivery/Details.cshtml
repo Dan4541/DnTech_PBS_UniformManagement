@@ -112,7 +112,7 @@
                                         </p>
                                     </div>
                                     
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Employer"))
                                     {
                                         <!-- Selector de estado editable -->
                                         <div class="mb-0">
@@ -198,7 +198,6 @@
                                         <th><i class="fas fa-tshirt me-2"></i>Tipo de Prenda</th>
                                         <th><i class="fas fa-ruler me-2"></i>Talla</th>
                                         <th><i class="fas fa-sort-numeric-up me-2"></i>Cantidad</th>
-                                        <th><i class="fas fa-sticky-note me-2"></i>Notas</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -217,16 +216,6 @@
                                                 <span class="badge" style="background: var(--primary-color);">
                                                     @detail.Quantity
                                                 </span>
-                                            </td>
-                                            <td>
-                                                @if (!string.IsNullOrEmpty(detail.Notes))
-                                                {
-                                                    <small class="text-muted">@detail.Notes</small>
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-muted">-</span>
-                                                }
                                             </td>
                                         </tr>
                                     }
@@ -261,25 +250,28 @@
                     </div>
 
                     <!-- Actions -->
-                    <div class="d-flex gap-2 mt-4">
+                    <div class="d-flex gap-2 mt-4 flex-wrap">
                         <a asp-action="Index" 
-                           asp-route-healthAreaId="@Model.HealthAreaId" 
-                           class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>Volver
+                        asp-route-healthAreaId="@Model.HealthAreaId" 
+                        class="btn btn-outline-secondary btn-responsive-details">
+                            <i class="fas fa-arrow-left"></i>
+                            <span class="btn-text ms-2">Volver</span>
                         </a>
                         <a asp-action="History" 
-                           asp-route-employeeId="@Model.EmployeeId" 
-                           asp-route-healthAreaId="@Model.HealthAreaId"
-                           class="btn btn-outline-info">
-                            <i class="fas fa-history me-2"></i>Ver Historial Completo
+                        asp-route-employeeId="@Model.EmployeeId" 
+                        asp-route-healthAreaId="@Model.HealthAreaId"
+                        class="btn btn-outline-info btn-responsive-details">
+                            <i class="fas fa-history"></i>
+                            <span class="btn-text ms-2">Ver Historial Completo</span>
                         </a>
                         @if (User.IsInRole("Administrator"))
                         {
                             <button type="button" 
-                                    class="btn btn-outline-danger ms-auto" 
+                                    class="btn btn-outline-danger btn-responsive-details ms-auto" 
                                     data-bs-toggle="modal" 
                                     data-bs-target="#deleteModal">
-                                <i class="fas fa-trash me-2"></i>Eliminar Entrega
+                                <i class="fas fa-trash"></i>
+                                <span class="btn-text ms-2">Eliminar Entrega</span>
                             </button>
                         }
                     </div>

@@ -65,3 +65,202 @@
         font-size: 0.75rem;
     }
 }
+
+/* ===== FIX PARA BOTONES DE ACCIONES ===== */
+
+/* Asegurar que todos los botones de acción tengan el mismo tamaño */
+.btn-group-sm > .btn,
+.btn-group .btn-outline-primary,
+.btn-group .btn-outline-info,
+.btn-group .btn-outline-success,
+.btn-group .btn-outline-danger {
+    min-width: 36px;
+    min-height: 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Asegurar que los íconos estén centrados */
+.btn-group .btn i {
+    margin: 0 !important;
+    font-size: 0.875rem;
+}
+
+/* Responsive - botones más pequeños en móvil */
+@media (max-width: 575px) {
+    .btn-group-sm > .btn,
+    .btn-group .btn {
+        min-width: 32px !important;
+        min-height: 32px !important;
+        width: 32px !important;
+        height: 32px !important;
+        padding: 0 !important;
+    }
+
+    .btn-group .btn i {
+        font-size: 0.75rem;
+    }
+
+    /* Reducir gap entre botones en móvil */
+    .btn-group {
+        gap: 2px;
+    }
+}
+
+/* ===== CREATE BUTTONS - VERTICAL Y CENTRADO ===== */
+
+.btn-responsive-create {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-responsive-create .btn-text {
+    display: inline;
+}
+
+/* Móvil - vertical, mantener colores y tamaños originales */
+@media (max-width: 575px) {
+    .create-buttons-container {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 1rem !important;
+        width: 100% !important;
+    }
+
+    /* Ambos botones con el MISMO tamaño */
+    .create-buttons-container .btn-gradient,
+    .create-buttons-container .btn-outline-secondary {
+        width: 280px !important; /* Mismo ancho fijo para ambos */
+        height: 48px !important; /* Misma altura para ambos */
+        padding: 0 1.5rem !important; /* Padding horizontal, cero vertical */
+        border-radius: 25px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 1rem !important; /* Tamaño de letra consistente */
+    }
+
+    /* Botón Registrar - mantener gradiente */
+    .create-buttons-container .btn-gradient {
+        background: var(--gradient-1) !important;
+        border: none !important;
+        color: white !important;
+    }
+
+    /* Botón Cancelar - mantener outline */
+    .create-buttons-container .btn-outline-secondary {
+        border: 1px solid #6c757d !important;
+        background: transparent !important;
+        color: #6c757d !important;
+    }
+
+    /* Texto de AMBOS botones */
+    .create-buttons-container .btn-gradient .btn-text,
+    .create-buttons-container .btn-outline-secondary .btn-text {
+        display: inline-block !important;
+        font-size: 1rem !important;
+        font-weight: 500 !important;
+        line-height: 1 !important;
+    }
+
+    /* Texto del botón Registrar */
+    .create-buttons-container .btn-gradient .btn-text {
+        color: white !important;
+    }
+
+    /* Texto del botón Cancelar */
+    .create-buttons-container .btn-outline-secondary .btn-text {
+        color: #6c757d !important;
+    }
+
+    /* Íconos de AMBOS botones - mismos tamaño y alineación */
+    .create-buttons-container .btn-gradient i,
+    .create-buttons-container .btn-outline-secondary i {
+        font-size: 1.1rem !important;
+        margin-right: 0.75rem !important;
+        display: inline-block !important;
+    }
+
+    /* Color de íconos */
+    .create-buttons-container .btn-gradient i {
+        color: white !important;
+    }
+
+    .create-buttons-container .btn-outline-secondary i {
+        color: #6c757d !important;
+    }
+
+    /* Hover para cancelar */
+    .create-buttons-container .btn-outline-secondary:hover {
+        background: #6c757d !important;
+        color: white !important;
+    }
+
+    .create-buttons-container .btn-outline-secondary:hover i,
+    .create-buttons-container .btn-outline-secondary:hover .btn-text {
+        color: white !important;
+    }
+}
+
+.create-buttons-container .btn-outline-secondary {
+    border-radius: 25px !important; /* Mismo radio de borde que el botón Registrar */
+    padding: 0.75rem 1.5rem !important; /* Mismo padding que el botón Registrar */
+    border: 1px solid #6c757d !important;
+    background: transparent !important;
+    color: #6c757d !important;
+    font-size: 1rem !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Asegurar que el botón Registrar mantenga sus bordes */
+.create-buttons-container .btn-gradient {
+    border-radius: 25px !important;
+}
+
+/* Mantener el hover consistente */
+.create-buttons-container .btn-outline-secondary:hover {
+    background: #6c757d !important;
+    color: white !important;
+}
+
+.create-buttons-container .btn-outline-secondary:hover i,
+.create-buttons-container .btn-outline-secondary:hover .btn-text {
+    color: white !important;
+}
+
+
+
+/* ===== BOTONES EN DETAILS - RESPONSIVE ===== */
+@media (max-width: 575px) {
+    .card-body .btn-responsive-details {
+        width: 44px !important;
+        height: 44px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .card-body .btn-responsive-details i {
+        margin: 0 !important;
+        display: block !important;
+    }
+
+    .card-body .btn-responsive-details .btn-text {
+        display: none !important;
+    }
+
+    .card-body > .d-flex.mt-4 {
+        justify-content: space-between !important;
+        gap: 0.75rem !important;
+    }
+
+    .card-body .btn-responsive-details.ms-auto {
+        margin-left: 0 !important;
+    }
+}

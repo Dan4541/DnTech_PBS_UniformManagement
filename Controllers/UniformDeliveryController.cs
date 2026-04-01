@@ -1,5 +1,6 @@
 ﻿using DnTech_PBS_UniformManagement.Data;
 using DnTech_PBS_UniformManagement.Models.Entities;
+using DnTech_PBS_UniformManagement.Models.Enums;
 using DnTech_PBS_UniformManagement.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -65,7 +66,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
             var employee = await _context.EmployeeHealthAreas
                 .Include(e => e.Employee)
                 .Include(e => e.HealthArea)
-                .FirstOrDefaultAsync(e => e.EmployeeId == employeeId && e.HealthAreaId == healthAreaId);
+                .FirstOrDefaultAsync(e => e.EmployeeId == employeeId && e.HealthAreaId == healthAreaId);        
 
             if (employee == null)
             {
@@ -79,7 +80,12 @@ namespace DnTech_PBS_UniformManagement.Controllers
                 HealthAreaId = healthAreaId,
                 EmployeeName = employee.Employee?.FullName,
                 EmployeeIdCard = employee.Employee?.IdCard,
-                EmployeePosition = employee.Position,
+                EmployeePosition = employee.Employee?.Position switch
+                {
+                    EmployeePosition.OfficeWorker => "Oficinista",
+                    EmployeePosition.Miscellaneous => "Misceláneo",
+                    _ => string.Empty
+                },
                 HealthAreaName = employee.HealthArea?.Name,
                 DeliveryDate = DateTime.Now,
                 Items = new List<DeliveryDetailItemViewModel>
@@ -133,8 +139,9 @@ namespace DnTech_PBS_UniformManagement.Controllers
                 Observations = model.Observations,
                 DaysUntilNextDelivery = daysUntilNext,
                 CreatedAt = DateTime.Now
+                
             };
-
+            
             _context.UniformDeliveries.Add(delivery);
             await _context.SaveChangesAsync();
 
@@ -146,8 +153,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
                     UniformDeliveryId = delivery.Id,
                     GarmentType = item.GarmentType,
                     Size = item.Size,
-                    Quantity = item.Quantity,
-                    Notes = item.Notes
+                    Quantity = item.Quantity
                 };
                 _context.DeliveryDetails.Add(detail);
             }
@@ -156,7 +162,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
 
             TempData["Success"] = "Entrega de uniformes registrada exitosamente.";
             return RedirectToAction(nameof(Index), new { healthAreaId = model.HealthAreaId });
-        }
+        }        
 
         // GET: Ver detalles de una entrega
         public async Task<IActionResult> Details(int id)
@@ -197,8 +203,7 @@ namespace DnTech_PBS_UniformManagement.Controllers
                     Id = d.Id,
                     GarmentType = d.GarmentType,
                     Size = d.Size,
-                    Quantity = d.Quantity,
-                    Notes = d.Notes
+                    Quantity = d.Quantity
                 }).ToList()
             };
 

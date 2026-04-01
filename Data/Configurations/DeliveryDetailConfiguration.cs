@@ -25,9 +25,6 @@ namespace DnTech_PBS_UniformManagement.Data.Configurations
                 .IsRequired()
                 .HasDefaultValue(1);
 
-            builder.Property(e => e.Notes)
-                .HasMaxLength(200);
-
             // Relación con UniformDelivery
             builder.HasOne(e => e.UniformDelivery)
                 .WithMany(ud => ud.DeliveryDetails)

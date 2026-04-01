@@ -637,3 +637,42 @@
         padding: 0.25em 0.5em;
     }
 }
+
+/* ===== BOTONES RESPONSIVE - SOLO ICONOS EN MÓVIL ===== */
+
+/* Botones en UniformDelivery Index */
+@media (max-width: 575px) {
+    /* Botón "Assign Employee" */
+    .btn-outline-success span:not(.d-inline),
+    .btn-outline-success .d-none.d-sm-inline {
+        display: none !important;
+    }
+
+    .btn-outline-success .d-inline.d-sm-none {
+        display: none !important;
+    }
+
+    /* Botón "Volver" */
+    .btn-outline-secondary span:not(.fas) {
+        display: none !important;
+    }
+
+    .btn-outline-secondary .d-none.d-sm-inline {
+        display: none !important;
+    }
+
+    /* Asegurar que los íconos se vean */
+    .btn i.fas,
+    .btn i.fa {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    /* Ajustar padding de botones para que sean más compactos */
+    .btn-outline-success,
+    .btn-outline-secondary {
+        padding: 0.5rem 0.75rem !important;
+        min-width: auto !important;
+    }
+}
+

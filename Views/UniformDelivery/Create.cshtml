@@ -116,19 +116,6 @@
                                                         <option value="XXL">XXL</option>
                                                         <option value="XXXL">XXXL</option>
                                                     </optgroup>
-                                                    <optgroup label="Tallas Zapatos">
-                                                        <option value="35">35</option>
-                                                        <option value="36">36</option>
-                                                        <option value="37">37</option>
-                                                        <option value="38">38</option>
-                                                        <option value="39">39</option>
-                                                        <option value="40">40</option>
-                                                        <option value="41">41</option>
-                                                        <option value="42">42</option>
-                                                        <option value="43">43</option>
-                                                        <option value="44">44</option>
-                                                        <option value="45">45</option>
-                                                    </optgroup>
                                                 </select>
                                             </div>
 
@@ -145,25 +132,21 @@
                                                     <i class="fas fa-trash me-1"></i>Quitar
                                                 </button>
                                             </div>
-
-                                            <div class="col-12">
-                                                <label class="form-label">Notas (Opcional)</label>
-                                                <input name="Items[@i].Notes" type="text" class="form-control"
-                                                       placeholder="Ej: Color azul, talla ajustada..." />
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             }
                         </div>
 
-                        <div class="d-flex gap-2 mt-4">
-                            <button type="submit" class="btn btn-custom btn-gradient">
-                                <i class="fas fa-save me-2"></i>Registrar Entrega
+                        <div class="d-flex gap-2 mt-4 create-buttons-container">
+                            <button type="submit" class="btn btn-custom btn-gradient btn-responsive-create">
+                                <i class="fas fa-save"></i>
+                                <span class="btn-text ms-2">Registrar Entrega</span>
                             </button>
                             <a asp-action="Index" asp-route-healthAreaId="@Model.HealthAreaId"
-                               class="btn btn-outline-secondary">
-                                <i class="fas fa-times me-2"></i>Cancelar
+                            class="btn btn-outline-secondary btn-responsive-create">
+                                <i class="fas fa-times"></i>
+                                <span class="btn-text ms-2">Cancelar</span>
                             </a>
                         </div>
                     </form>
@@ -240,11 +223,6 @@
                                 <button type="button" class="btn btn-danger w-100" onclick="removeItem(this)">
                                     <i class="fas fa-trash me-1"></i>Quitar
                                 </button>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">Notas (Opcional)</label>
-                                <input name="Items[${itemIndex}].Notes" type="text" class="form-control"
-                                       placeholder="Ej: Color azul, talla ajustada..." />
                             </div>
                         </div>
                     </div>

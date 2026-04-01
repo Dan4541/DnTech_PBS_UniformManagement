@@ -31,20 +31,19 @@
             </p>
         </div>
         <div class="d-flex gap-2">
-            @if (User.IsInRole("Administrator") || User.IsInRole("Supervisor"))
+            @if (User.IsInRole("Administrator") || User.IsInRole("Employer"))
             {
                 <a asp-controller="Dashboard"
-                   asp-action="AssignEmployee"
-                   asp-route-healthAreaId="@ViewBag.HealthAreaId"
-                   class="btn btn-outline-success">
-                    <i class="fas fa-user-plus me-2"></i>
-                    <span class="d-none d-sm-inline">Assign Employee</span>
-                    <span class="d-inline d-sm-none">Assign</span>
+                asp-action="AssignEmployee"
+                asp-route-healthAreaId="@ViewBag.HealthAreaId"
+                class="btn btn-outline-success btn-responsive">
+                    <i class="fas fa-user-plus"></i>
+                    <span class="btn-text ms-2">Assign Employee</span>
                 </a>
             }
-            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-2"></i>
-                <span class="d-none d-sm-inline">Volver</span>
+            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary btn-responsive">
+                <i class="fas fa-arrow-left"></i>
+                <span class="btn-text ms-2">Volver</span>
             </a>
         </div>
     </div>

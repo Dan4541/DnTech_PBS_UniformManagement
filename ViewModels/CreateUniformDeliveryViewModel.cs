@@ -6,7 +6,7 @@ namespace DnTech_PBS_UniformManagement.ViewModels
     {
         [Required]
         public string EmployeeId { get; set; } = string.Empty;
-
+        
         [Required]
         public int HealthAreaId { get; set; }
 

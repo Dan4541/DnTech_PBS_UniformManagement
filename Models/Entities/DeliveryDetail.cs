@@ -27,10 +27,6 @@ namespace DnTech_PBS_UniformManagement.Models.Entities
         [Range(1, 100, ErrorMessage = "La cantidad debe estar entre 1 y 100")]
         public int Quantity { get; set; } = 1;
 
-        [StringLength(200)]
-        [Display(Name = "Notas")]
-        public string? Notes { get; set; }
-
         // Navigation properties
         [ForeignKey("UniformDeliveryId")]
         public virtual UniformDelivery? UniformDelivery { get; set; }
